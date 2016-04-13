@@ -9,7 +9,7 @@ import android.widget.Button;
 import com.jameskelly.onhand.R;
 import java.io.IOException;
 
-public class LockScreenActivity extends AppCompatActivity {
+public class LockScreenActivity extends AppCompatActivity implements LockScreenView {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
