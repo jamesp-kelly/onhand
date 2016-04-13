@@ -6,7 +6,6 @@ public class HomePresenterImpl implements HomePresenter {
 
   private HomeView homeView;
 
-  //@Inject
   public HomePresenterImpl(HomeView homeView) {
     this.homeView = homeView;
   }
