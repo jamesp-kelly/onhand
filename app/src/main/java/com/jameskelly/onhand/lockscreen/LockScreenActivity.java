@@ -6,7 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import butterknife.ButterKnife;
 import com.jameskelly.onhand.R;
+import com.jameskelly.onhand.di.LockScreenModule;
+import com.jameskelly.onhand.di.OnHandApplication;
 import java.io.IOException;
 
 public class LockScreenActivity extends AppCompatActivity implements LockScreenView {
@@ -14,6 +17,13 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home);
+
+    ButterKnife.inject(this);
+
+    OnHandApplication.getInstance(this)
+        .getAppComponent()
+        .plus(new LockScreenModule(this))
+        .inject(this);
 
 
     //testing
