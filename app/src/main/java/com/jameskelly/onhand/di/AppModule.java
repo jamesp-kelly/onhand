@@ -25,4 +25,5 @@ public class AppModule {
   protected Resources provideResources() {
     return application.getResources();
   }
+
 }

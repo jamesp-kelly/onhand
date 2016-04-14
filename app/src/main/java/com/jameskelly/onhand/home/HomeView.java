@@ -1,8 +1,10 @@
 package com.jameskelly.onhand.home;
 
+import android.graphics.Bitmap;
+
 public interface HomeView {
 
-  void showPreviewImage(boolean confirmed);
+  void showPreviewImage(Bitmap previewBitmap);
   void showPreviewError();
 
   void showInitialButtons();

@@ -1,17 +1,14 @@
 package com.jameskelly.onhand.home;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -22,12 +19,12 @@ import com.jameskelly.onhand.di.HomeModule;
 import com.jameskelly.onhand.di.OnHandApplication;
 import com.jameskelly.onhand.util.NotImplementedException;
 import java.io.File;
-import java.io.IOException;
 import javax.inject.Inject;
 
 public class HomeActivity extends AppCompatActivity implements HomeView {
 
   private static final int TAKE_PICTURE_REQUEST_CODE = 1;
+  private static final int LOAD_GALLERY_REQUEST_CODE = 2;
 
   private Uri imageUri;
 
@@ -47,7 +44,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
         .getAppComponent()
         .plus(new HomeModule(this))
         .inject(this);
-
   }
 
   @OnClick(R.id.camera_button)
@@ -60,12 +56,12 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     presenter.openGallery();
   }
 
-  @Override public void showPreviewImage(boolean confirmed) {
-    throw new NotImplementedException();
+  @Override public void showPreviewImage(Bitmap previewBitmap) {
+    imagePreview.setImageBitmap(previewBitmap);
   }
 
   @Override public void showPreviewError() {
-    throw new NotImplementedException();
+    Toast.makeText(this, "Error loading image", Toast.LENGTH_SHORT).show();
   }
 
   @Override public void showInitialButtons() {
@@ -81,36 +77,25 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   }
 
   @Override public void showGallery() {
-    throw new NotImplementedException();
+    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    startActivityForResult(intent, LOAD_GALLERY_REQUEST_CODE);
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     switch (requestCode) {
-      case TAKE_PICTURE_REQUEST_CODE:
+      case TAKE_PICTURE_REQUEST_CODE: {
         if (resultCode == Activity.RESULT_OK) {
-          Uri selectedImage = imageUri;
-          ContentResolver cr = getContentResolver();
-          cr.notifyChange(selectedImage, null);
-          Bitmap bitmap;
-          try {
-            bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, selectedImage);
-
-            //force portrait todo: more general approach for handling image roatation
-            final int width = bitmap.getWidth();
-            final int height = bitmap.getHeight();
-            Matrix matrix = new Matrix();
-            matrix.postScale(1f, 1f);
-            matrix.postRotate(90);
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
-
-            imagePreview.setImageBitmap(bitmap);
-            Toast.makeText(this, selectedImage.toString(), Toast.LENGTH_SHORT).show();
-          } catch (IOException e) {
-            Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
-            Log.e(HomeActivity.class.getSimpleName(), e.toString());
-          }
+          presenter.loadPreviewImage(imageUri, getContentResolver());
         }
+        break;
+      }
+      case LOAD_GALLERY_REQUEST_CODE: {
+        if (resultCode == Activity.RESULT_OK) {
+          presenter.loadPreviewImage(data.getData(), getContentResolver());
+        }
+        break;
+      }
     }
   }
 }
