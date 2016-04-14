@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -94,6 +95,15 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
           Bitmap bitmap;
           try {
             bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, selectedImage);
+
+            //force portrait todo: more general approach for handling image roatation
+            final int width = bitmap.getWidth();
+            final int height = bitmap.getHeight();
+            Matrix matrix = new Matrix();
+            matrix.postScale(1f, 1f);
+            matrix.postRotate(90);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+
             imagePreview.setImageBitmap(bitmap);
             Toast.makeText(this, selectedImage.toString(), Toast.LENGTH_SHORT).show();
           } catch (IOException e) {
