@@ -60,4 +60,7 @@
   <string name="pref_ringtone_silent">Silent</string>
 
   <string name="pref_title_vibrate">Vibrate</string>
+  <string name="HomeTitle">On Hand</string>
+  <string name="camera_button">Camera</string>
+  <string name="gallery_button">Gallery</string>
 </resources>
