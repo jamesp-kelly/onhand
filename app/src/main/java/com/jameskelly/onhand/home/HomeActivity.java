@@ -5,10 +5,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -17,8 +18,6 @@ import butterknife.OnClick;
 import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.di.HomeModule;
 import com.jameskelly.onhand.di.OnHandApplication;
-import com.jameskelly.onhand.util.NotImplementedException;
-import java.io.File;
 import javax.inject.Inject;
 
 public class HomeActivity extends AppCompatActivity implements HomeView {
@@ -29,6 +28,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   private Uri imageUri;
 
   @Bind(R.id.image_preview) ImageView imagePreview;
+  @Bind(R.id.start_service_fab) FloatingActionButton startServiceFab;
 
   @Inject
   HomePresenter presenter;
@@ -56,29 +56,31 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     presenter.openGallery();
   }
 
+  @OnClick(R.id.start_service_fab)
+  public void startServiceClicked() {
+    presenter.confirmPreviewImage();
+  }
+
   @Override public void showPreviewImage(Bitmap previewBitmap) {
     imagePreview.setImageBitmap(previewBitmap);
+    startServiceFab.setVisibility(View.VISIBLE);
   }
 
   @Override public void showPreviewError() {
     Toast.makeText(this, "Error loading image", Toast.LENGTH_SHORT).show();
   }
 
-  @Override public void showInitialButtons() {
-    throw new NotImplementedException();
-  }
-
-  @Override public void showCamera() {
-    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    File photo = new File(Environment.getExternalStorageDirectory(), "ON_HAND_CAPTURE.jpg");
-    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
-    imageUri = Uri.fromFile(photo);
+  @Override public void startCamera(Intent intent) {
+    imageUri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
     startActivityForResult(intent, TAKE_PICTURE_REQUEST_CODE);
   }
 
-  @Override public void showGallery() {
-    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+  @Override public void startGallery(Intent intent) {
     startActivityForResult(intent, LOAD_GALLERY_REQUEST_CODE);
+  }
+
+  @Override public void startOnHandService(Intent intent) {
+    startService(intent);
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -86,13 +88,13 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     switch (requestCode) {
       case TAKE_PICTURE_REQUEST_CODE: {
         if (resultCode == Activity.RESULT_OK) {
-          presenter.loadPreviewImage(imageUri, getContentResolver());
+          presenter.loadPreviewImage(imageUri);
         }
         break;
       }
       case LOAD_GALLERY_REQUEST_CODE: {
         if (resultCode == Activity.RESULT_OK) {
-          presenter.loadPreviewImage(data.getData(), getContentResolver());
+          presenter.loadPreviewImage(data.getData());
         }
         break;
       }
