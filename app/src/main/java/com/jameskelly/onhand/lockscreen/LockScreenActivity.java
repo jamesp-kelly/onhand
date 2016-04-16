@@ -2,7 +2,6 @@ package com.jameskelly.onhand.lockscreen;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.WindowManager;
 import butterknife.ButterKnife;
 import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.di.LockScreenModule;
@@ -22,12 +21,12 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
         .inject(this);
 
 
-    //testing
-    this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
-        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED,
-        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+    //disable for now
+    //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
+    //    WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+    //    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED,
+    //    WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+    //    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
     //
   }
 }
