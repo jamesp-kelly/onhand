@@ -61,8 +61,13 @@ public class HomePresenterImpl implements HomePresenter {
     }
   }
 
-  @Override public void confirmPreviewImage() {
+  @Override public void toggleService(boolean start) {
     Intent intent = new Intent((Activity)homeView, OnHandServiceImpl.class);
-    homeView.startOnHandService(intent);
+    if (start) {
+      homeView.startOnHandService(intent);
+    } else {
+      homeView.stopOnHandService(intent);
+    }
   }
+
 }

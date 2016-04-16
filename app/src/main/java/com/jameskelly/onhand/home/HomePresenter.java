@@ -7,5 +7,5 @@ public interface HomePresenter {
   void openGallery();
 
   void loadPreviewImage(Uri selectedImage);
-  void confirmPreviewImage();
+  void toggleService(boolean start);
 }

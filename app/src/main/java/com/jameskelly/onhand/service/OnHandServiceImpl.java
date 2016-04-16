@@ -1,5 +1,7 @@
 package com.jameskelly.onhand.service;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,7 +20,7 @@ public class OnHandServiceImpl extends Service implements OnHandService {
 
     IntentFilter filter = new IntentFilter();
     filter.addAction(Intent.ACTION_SCREEN_OFF);
-
+    registerReceiver(receiver, filter);
   }
 
   private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -54,5 +56,15 @@ public class OnHandServiceImpl extends Service implements OnHandService {
 
   @Override public void removeNotification() {
     Toast.makeText(this, "remove notification", Toast.LENGTH_SHORT).show();
+  }
+
+  public static boolean isServiceRunning(Context context) {
+    ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+      if (OnHandServiceImpl.class.getName().equals(service.service.getClassName())) {
+        return true;
+      }
+    }
+    return false;
   }
 }

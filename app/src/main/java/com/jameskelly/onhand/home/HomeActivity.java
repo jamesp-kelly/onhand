@@ -18,6 +18,7 @@ import butterknife.OnClick;
 import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.di.HomeModule;
 import com.jameskelly.onhand.di.OnHandApplication;
+import com.jameskelly.onhand.service.OnHandServiceImpl;
 import javax.inject.Inject;
 
 public class HomeActivity extends AppCompatActivity implements HomeView {
@@ -58,7 +59,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   @OnClick(R.id.start_service_fab)
   public void startServiceClicked() {
-    presenter.confirmPreviewImage();
+    presenter.toggleService(!OnHandServiceImpl.isServiceRunning(this));
   }
 
   @Override public void showPreviewImage(Bitmap previewBitmap) {
@@ -81,6 +82,10 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   @Override public void startOnHandService(Intent intent) {
     startService(intent);
+  }
+
+  @Override public void stopOnHandService(Intent intent) {
+    stopService(intent);
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

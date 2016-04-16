@@ -11,4 +11,5 @@ public interface HomeView {
   void startCamera(Intent intent);
   void startGallery(Intent intent);
   void startOnHandService(Intent intent);
+  void stopOnHandService(Intent intent);
 }
