@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import com.jameskelly.onhand.service.OnHandService;
+import com.jameskelly.onhand.service.OnHandServiceImpl;
 import java.io.File;
 import java.io.IOException;
 import javax.inject.Inject;
@@ -62,7 +62,7 @@ public class HomePresenterImpl implements HomePresenter {
   }
 
   @Override public void confirmPreviewImage() {
-    Intent intent = new Intent((Activity)homeView, OnHandService.class);
+    Intent intent = new Intent((Activity)homeView, OnHandServiceImpl.class);
     homeView.startOnHandService(intent);
   }
 }

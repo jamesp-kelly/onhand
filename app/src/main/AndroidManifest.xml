@@ -24,6 +24,8 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+    <activity android:name=".lockscreen.LockScreenActivity"/>
+    <service android:name=".service.OnHandServiceImpl"/>
   </application>
 
 </manifest>
