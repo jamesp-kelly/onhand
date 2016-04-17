@@ -1,27 +1,31 @@
 package com.jameskelly.onhand.home;
 
-import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
+import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.service.OnHandServiceImpl;
 import java.io.File;
 import java.io.IOException;
-import javax.inject.Inject;
 
 public class HomePresenterImpl implements HomePresenter {
 
   private HomeView homeView;
-
-  @Inject ContentResolver contentResolver;
+  private Context context;
+  private SharedPreferences sharedPreferences;
 
   public HomePresenterImpl(HomeView homeView) {
     this.homeView = homeView;
+    this.context = (Context) homeView;
+    sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
   }
 
   @Override public void openCamera() {
@@ -37,7 +41,7 @@ public class HomePresenterImpl implements HomePresenter {
   }
 
   @Override public void loadPreviewImage(Uri selectedImage) {
-    ContentResolver cr = ((Activity)homeView).getContentResolver();
+    ContentResolver cr = context.getContentResolver();
     cr.notifyChange(selectedImage, null);
     Bitmap bitmap = null;
     try {
@@ -56,18 +60,25 @@ public class HomePresenterImpl implements HomePresenter {
 
     if (bitmap != null) {
       homeView.showPreviewImage(bitmap);
+      updateSharedPrefs(context.getString(R.string.shared_prefs_saved_image),
+          selectedImage.toString());
     } else {
       homeView.showPreviewError();
     }
   }
 
   @Override public void toggleService(boolean start) {
-    Intent intent = new Intent((Activity)homeView, OnHandServiceImpl.class);
+    Intent intent = new Intent(context, OnHandServiceImpl.class);
     if (start) {
       homeView.startOnHandService(intent);
     } else {
       homeView.stopOnHandService(intent);
+      updateSharedPrefs(context.getString(R.string.shared_prefs_saved_image), "");
     }
   }
 
+  @Override public boolean updateSharedPrefs(String key, String uriString) {
+    return !uriString.isEmpty() ? sharedPreferences.edit().putString(key, uriString).commit() :
+        sharedPreferences.edit().remove(key).commit();
+  }
 }

@@ -31,8 +31,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   @Bind(R.id.image_preview) ImageView imagePreview;
   @Bind(R.id.start_service_fab) FloatingActionButton startServiceFab;
 
-  @Inject
-  HomePresenter presenter;
+  @Inject HomePresenter presenter;
 
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {

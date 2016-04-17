@@ -63,4 +63,5 @@
   <string name="HomeTitle">On Hand</string>
   <string name="camera_button">Camera</string>
   <string name="gallery_button">Gallery</string>
+  <string name="shared_prefs_saved_image">saved_image</string>
 </resources>
