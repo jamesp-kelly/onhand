@@ -19,13 +19,16 @@ import com.jameskelly.onhand.lockscreen.LockScreenActivity;
 
 public class OnHandServiceImpl extends Service implements OnHandService {
 
-  private static int ONHAND_NOTIFICATION_ID = 1111;
+  private static final int ONHAND_NOTIFICATION_ID = 1111;
+  private static final String STOP_SERVICE = "com.jameskelly.onhand.StopService";
 
   @Override public void onCreate() {
     super.onCreate();
 
     IntentFilter filter = new IntentFilter();
     filter.addAction(Intent.ACTION_SCREEN_OFF);
+    filter.addAction(STOP_SERVICE);
+
     registerReceiver(receiver, filter);
   }
 
@@ -35,6 +38,8 @@ public class OnHandServiceImpl extends Service implements OnHandService {
         Intent i = new Intent(OnHandServiceImpl.this, LockScreenActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
+      } else if (intent.getAction().equals(STOP_SERVICE)) {
+        OnHandServiceImpl.this.stopSelf();
       }
     }
   };
@@ -68,12 +73,10 @@ public class OnHandServiceImpl extends Service implements OnHandService {
     homeIntent.setAction(Intent.ACTION_MAIN);
     homeIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
-    Intent stopIntent = new Intent(this, OnHandServiceImpl.class);
-    stopIntent.setAction("STOP");
+    Intent stopIntent = new Intent(STOP_SERVICE);
 
     builder.setContentIntent(PendingIntent.getActivity(this, 0, homeIntent, 0));
-    //todo: stop intent not working
-    builder.setDeleteIntent(PendingIntent.getService(this, 0, stopIntent, 0));
+    builder.setDeleteIntent(PendingIntent.getBroadcast(this, 0, stopIntent, 0));
 
     NotificationManager notificationManager =
         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
