@@ -2,8 +2,9 @@ package com.jameskelly.onhand.home;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import com.jameskelly.onhand.base.BaseView;
 
-public interface HomeView {
+public interface HomeView extends BaseView {
 
   void showPreviewImage(Bitmap previewBitmap);
   void showPreviewError();

@@ -9,7 +9,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -34,20 +33,21 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   @Inject HomePresenter presenter;
 
-
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home);
+    bindDI();
 
+    //if there's an image saved in SharedPreferences, display it
+    presenter.loadPreviewImageFromPrefs();
+  }
+
+  @Override public void bindDI() {
     ButterKnife.bind(this);
-
     OnHandApplication.getInstance(this)
         .getAppComponent()
         .plus(new HomeModule(this))
         .inject(this);
-
-    //if there's an image saved in SharedPreferences, display it
-    presenter.loadPreviewImageFromPrefs();
   }
 
   @OnClick(R.id.camera_button)
@@ -111,6 +111,5 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   @Override protected void onPause() {
     super.onPause();
-    Log.i(HomeActivity.class.getSimpleName(), "PAUSE");
   }
 }
