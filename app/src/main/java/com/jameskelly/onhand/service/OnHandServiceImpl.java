@@ -34,6 +34,7 @@ public class OnHandServiceImpl extends Service implements OnHandService {
 
   private final BroadcastReceiver receiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
+      Log.i(OnHandServiceImpl.class.getSimpleName(), "BroadCastReciever ping");
       if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
         Intent i = new Intent(OnHandServiceImpl.this, LockScreenActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

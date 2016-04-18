@@ -67,6 +67,14 @@ public class HomePresenterImpl implements HomePresenter {
     }
   }
 
+  @Override public void loadPreviewImageFromPrefs() {
+    String savedImageUri = sharedPreferences
+        .getString(context.getString(R.string.shared_prefs_saved_image), "");
+    if (!savedImageUri.isEmpty()) {
+      loadPreviewImage(Uri.parse(savedImageUri));
+    }
+  }
+
   @Override public void toggleService(boolean start) {
     Intent intent = new Intent(context, OnHandServiceImpl.class);
     if (start) {

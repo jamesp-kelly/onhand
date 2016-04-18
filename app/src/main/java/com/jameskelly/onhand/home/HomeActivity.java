@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -44,6 +45,9 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
         .getAppComponent()
         .plus(new HomeModule(this))
         .inject(this);
+
+    //if there's an image saved in SharedPreferences, display it
+    presenter.loadPreviewImageFromPrefs();
   }
 
   @OnClick(R.id.camera_button)
@@ -103,5 +107,10 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
         break;
       }
     }
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
+    Log.i(HomeActivity.class.getSimpleName(), "PAUSE");
   }
 }
