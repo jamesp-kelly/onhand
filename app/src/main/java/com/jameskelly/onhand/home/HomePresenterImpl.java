@@ -1,22 +1,19 @@
 package com.jameskelly.onhand.home;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.util.Log;
 import com.jameskelly.onhand.R;
+import com.jameskelly.onhand.base.BasePresenterImpl;
 import com.jameskelly.onhand.service.OnHandServiceImpl;
 import java.io.File;
-import java.io.IOException;
 
-public class HomePresenterImpl implements HomePresenter {
+public class HomePresenterImpl extends BasePresenterImpl implements HomePresenter {
 
   private HomeView homeView;
   private Context context;
@@ -41,22 +38,8 @@ public class HomePresenterImpl implements HomePresenter {
   }
 
   @Override public void loadPreviewImage(Uri selectedImage) {
-    ContentResolver cr = context.getContentResolver();
-    cr.notifyChange(selectedImage, null);
-    Bitmap bitmap = null;
-    try {
-      bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, selectedImage);
 
-      //force portrait todo: more general approach for handling image rotation
-      final int width = bitmap.getWidth();
-      final int height = bitmap.getHeight();
-      Matrix matrix = new Matrix();
-      matrix.postScale(1f, 1f);
-      matrix.postRotate(90);
-      bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
-    } catch (IOException e) {
-      Log.e(HomeActivity.class.getSimpleName(), e.toString());
-    }
+    Bitmap bitmap = getBitmapWithCorrectRotation(context, selectedImage);
 
     if (bitmap != null) {
       homeView.showPreviewImage(bitmap);
