@@ -13,9 +13,11 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
+import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.home.HomeActivity;
 import com.jameskelly.onhand.lockscreen.LockScreenActivity;
+
+import static android.support.v4.app.NotificationCompat.PRIORITY_MAX;
 
 public class OnHandServiceImpl extends Service implements OnHandService {
 
@@ -36,7 +38,9 @@ public class OnHandServiceImpl extends Service implements OnHandService {
     @Override public void onReceive(Context context, Intent intent) {
       if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
         Intent i = new Intent(OnHandServiceImpl.this, LockScreenActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            .addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+            .addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         startActivity(i);
       } else if (intent.getAction().equals(STOP_SERVICE)) {
         OnHandServiceImpl.this.stopSelf();
@@ -53,8 +57,11 @@ public class OnHandServiceImpl extends Service implements OnHandService {
 
   @Override public void onDestroy() {
     Log.i(OnHandServiceImpl.class.getSimpleName(), "destroying service");
-    removeNotification();
     unregisterReceiver(receiver);
+
+    //kill lockscreen activity
+    Intent finishLockScreenIntent = new Intent(getString(R.string.finish_lockscreen_activity));
+    sendBroadcast(finishLockScreenIntent);
   }
 
   @Nullable @Override public IBinder onBind(Intent intent) {
@@ -62,29 +69,29 @@ public class OnHandServiceImpl extends Service implements OnHandService {
   }
 
   @Override public void createNotification() {
-    NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-    builder.setAutoCancel(false)
-        .setContentTitle("Content title")
-        .setContentText("Content text")
-        .setSmallIcon(android.R.drawable.stat_sys_warning)
-        .setTicker("Ticker");
-
     Intent homeIntent = new Intent(this, HomeActivity.class);
     homeIntent.setAction(Intent.ACTION_MAIN);
     homeIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
     Intent stopIntent = new Intent(STOP_SERVICE);
 
-    builder.setContentIntent(PendingIntent.getActivity(this, 0, homeIntent, 0));
-    builder.setDeleteIntent(PendingIntent.getBroadcast(this, 0, stopIntent, 0));
+    PendingIntent homePendingIntent = PendingIntent.getActivity(this, 0, homeIntent, 0);
+    PendingIntent stopPendingIntent = PendingIntent.getBroadcast(this, 0, stopIntent, 0);
+
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+    builder.setAutoCancel(false)
+        .setPriority(PRIORITY_MAX)
+        .setContentTitle(getString(R.string.notification_content_title))
+        .setContentText(getString(R.string.notification_content_text))
+        .setSmallIcon(android.R.drawable.stat_sys_warning)
+        .setTicker(getString(R.string.notification_ticker))
+        .addAction(R.drawable.ic_info_black_24dp, getString(R.string.notification_cancel), stopPendingIntent)
+        .setContentIntent(homePendingIntent)
+        .setDeleteIntent(stopPendingIntent);
 
     NotificationManager notificationManager =
         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     notificationManager.notify(ONHAND_NOTIFICATION_ID, builder.build());
-  }
-
-  @Override public void removeNotification() {
-    Toast.makeText(this, "remove notification", Toast.LENGTH_SHORT).show();
   }
 
   public static boolean isServiceRunning(Context context) {

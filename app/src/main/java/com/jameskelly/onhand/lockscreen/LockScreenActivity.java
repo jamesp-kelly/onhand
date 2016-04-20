@@ -1,5 +1,9 @@
 package com.jameskelly.onhand.lockscreen;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +25,10 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_lockscreen);
+
+    IntentFilter filter = new IntentFilter();
+    filter.addAction(getString(R.string.finish_lockscreen_activity));
+    registerReceiver(lockScreenReciever, filter);
 
     bindDI();
     setupWindow();
@@ -57,5 +65,14 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
   @Override protected void onDestroy() {
     super.onDestroy();
     presenter.onDestroy();
+    unregisterReceiver(lockScreenReciever);
   }
+
+  private final BroadcastReceiver lockScreenReciever = new BroadcastReceiver() {
+    @Override public void onReceive(Context context, Intent intent) {
+      if (intent.getAction().equals(getString(R.string.finish_lockscreen_activity))) {
+        LockScreenActivity.this.finish();
+      }
+    }
+  };
 }

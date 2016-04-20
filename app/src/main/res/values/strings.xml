@@ -64,4 +64,9 @@
   <string name="camera_button">Camera</string>
   <string name="gallery_button">Gallery</string>
   <string name="shared_prefs_saved_image">saved_image</string>
+  <string name="notification_ticker">OnHand service started</string>
+  <string name="notification_content_title">OnHand</string>
+  <string name="notification_content_text">OnHand service is running</string>
+  <string name="notification_cancel">Cancel</string>
+  <string name="finish_lockscreen_activity">finish_lockscreen_activity</string>
 </resources>
