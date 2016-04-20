@@ -57,7 +57,7 @@ public class LockScreenPresenterImpl extends BasePresenterImpl implements LockSc
         try {
           return Observable.just(correctBitmapRotation(context, imageUri));
         } catch (IOException e) {
-          return null;
+          return Observable.error(e);
         }
       }
     });
