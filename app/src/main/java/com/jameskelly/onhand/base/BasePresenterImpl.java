@@ -6,30 +6,26 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.util.Log;
 import java.io.IOException;
 
 public class BasePresenterImpl implements BasePresenter {
-  @Override public Bitmap getBitmapWithCorrectRotation(Context context, Uri imageUri) {
+  @Override public Bitmap correctBitmapRotation(Context context, Uri imageUri) throws IOException {
     ContentResolver cr = context.getContentResolver();
     cr.notifyChange(imageUri, null);
     Bitmap bitmap = null;
+
+    bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, imageUri);
+
+    ExifInterface exif = null;
     try {
-      bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, imageUri);
-
-      ExifInterface exif = null;
-      try {
-        exif = new ExifInterface(imageUri.getPath());
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-          ExifInterface.ORIENTATION_UNDEFINED);
-
-      bitmap = rotateBitmap(bitmap, orientation);
-
+      exif = new ExifInterface(imageUri.getPath());
     } catch (IOException e) {
-      Log.e(BasePresenterImpl.class.getSimpleName(), e.toString());
+      e.printStackTrace();
+    }
+
+    if (exif != null) {
+      int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+      bitmap = rotateBitmap(bitmap, orientation);
     }
 
     return bitmap;

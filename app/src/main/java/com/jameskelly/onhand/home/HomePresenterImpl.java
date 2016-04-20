@@ -8,10 +8,17 @@ import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.util.Log;
 import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.base.BasePresenterImpl;
 import com.jameskelly.onhand.service.OnHandServiceImpl;
 import java.io.File;
+import java.io.IOException;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func0;
+import rx.schedulers.Schedulers;
 
 public class HomePresenterImpl extends BasePresenterImpl implements HomePresenter {
 
@@ -37,17 +44,25 @@ public class HomePresenterImpl extends BasePresenterImpl implements HomePresente
     homeView.startGallery(intent);
   }
 
-  @Override public void loadPreviewImage(Uri selectedImage) {
+  @Override public void loadPreviewImage(final Uri selectedImage) {
+    getBitmapObservable(selectedImage)
+        .subscribeOn(Schedulers.computation())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Subscriber<Bitmap>() {
+      @Override public void onCompleted() {
+        updateSharedPrefs(context.getString(R.string.shared_prefs_saved_image),
+            selectedImage.toString());
+      }
 
-    Bitmap bitmap = getBitmapWithCorrectRotation(context, selectedImage);
+      @Override public void onError(Throwable e) {
+        Log.e(HomePresenterImpl.class.getSimpleName(), e.getMessage(), e);
+        homeView.showPreviewError();
+      }
 
-    if (bitmap != null) {
-      homeView.showPreviewImage(bitmap);
-      updateSharedPrefs(context.getString(R.string.shared_prefs_saved_image),
-          selectedImage.toString());
-    } else {
-      homeView.showPreviewError();
-    }
+      @Override public void onNext(Bitmap bitmap) {
+        homeView.showPreviewImage(bitmap);
+      }
+    });
   }
 
   @Override public void loadPreviewImageFromPrefs() {
@@ -71,5 +86,17 @@ public class HomePresenterImpl extends BasePresenterImpl implements HomePresente
   @Override public boolean updateSharedPrefs(String key, String uriString) {
     return !uriString.isEmpty() ? sharedPreferences.edit().putString(key, uriString).commit() :
         sharedPreferences.edit().remove(key).commit();
+  }
+
+  private Observable<Bitmap> getBitmapObservable(final Uri imageUri) {
+    return Observable.defer(new Func0<Observable<Bitmap>>() {
+      @Override public Observable<Bitmap> call() {
+        try {
+          return Observable.just(correctBitmapRotation(context, imageUri));
+        } catch (IOException e) {
+          return null;
+        }
+      }
+    });
   }
 }

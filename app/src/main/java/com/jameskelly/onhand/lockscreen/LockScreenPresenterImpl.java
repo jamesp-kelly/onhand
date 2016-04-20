@@ -5,8 +5,15 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.base.BasePresenterImpl;
+import java.io.IOException;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func0;
+import rx.schedulers.Schedulers;
 
 public class LockScreenPresenterImpl extends BasePresenterImpl implements LockScreenPresenter {
 
@@ -14,25 +21,44 @@ public class LockScreenPresenterImpl extends BasePresenterImpl implements LockSc
   private Context context;
   private SharedPreferences sharedPreferences;
 
-  public LockScreenPresenterImpl(LockScreenView lockScreenView) {
+  public LockScreenPresenterImpl(final LockScreenView lockScreenView) {
     this.lockScreenView = lockScreenView;
     this.context = (Context) lockScreenView;
     this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
   }
 
-  //todo - lots of repeated code here and homescreenpresenterimpl
   @Override public void loadSavedImageFromPrefs() {
     String savedImageUri = sharedPreferences
         .getString(context.getString(R.string.shared_prefs_saved_image), "");
     if (!savedImageUri.isEmpty()) {
-      Uri imageUri = Uri.parse(savedImageUri);
-      Bitmap bitmap = getBitmapWithCorrectRotation(context, imageUri);
+      getBitmapObservable(Uri.parse(savedImageUri))
+          .subscribeOn(Schedulers.computation())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(new Subscriber<Bitmap>() {
+        @Override public void onCompleted() {
+        }
 
-      if (bitmap != null) {
-        lockScreenView.showImage(bitmap);
-      } else {
-        //show error on the lock screen??
-      }
+        @Override public void onError(Throwable e) {
+          Log.e(LockScreenPresenterImpl.class.getSimpleName(), e.getMessage(), e);
+        }
+
+        @Override public void onNext(Bitmap bitmap) {
+          lockScreenView.showImage(bitmap);
+        }
+      });
     }
   }
+
+  public Observable<Bitmap> getBitmapObservable(final Uri imageUri) {
+    return Observable.defer(new Func0<Observable<Bitmap>>() {
+      @Override public Observable<Bitmap> call() {
+        try {
+          return Observable.just(correctBitmapRotation(context, imageUri));
+        } catch (IOException e) {
+          return null;
+        }
+      }
+    });
+  }
+
 }
