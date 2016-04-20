@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import butterknife.Bind;
@@ -33,6 +34,7 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
     bindDI();
     setupWindow();
 
+    Log.i("TAG", "now loading image from prefs");
     presenter.loadSavedImageFromPrefs();
   }
 
@@ -55,6 +57,7 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
   }
 
   @Override public void showImage(Bitmap savedImage) {
+    Log.i("TAG", "now setting image");
     lockscreenImage.setImageBitmap(savedImage);
   }
 

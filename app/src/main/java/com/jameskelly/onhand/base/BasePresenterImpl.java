@@ -16,19 +16,22 @@ public class BasePresenterImpl implements BasePresenter {
 
     bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, imageUri);
 
-    ExifInterface exif = null;
-    try {
-      exif = new ExifInterface(imageUri.getPath());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    if (exif != null) {
-      int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-      bitmap = rotateBitmap(bitmap, orientation);
-    }
-
+    //temp!!
     return bitmap;
+
+    //ExifInterface exif = null;
+    //try {
+    //  exif = new ExifInterface(imageUri.getPath());
+    //} catch (IOException e) {
+    //  e.printStackTrace();
+    //}
+    //
+    //if (exif != null) {
+    //  int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+    //  bitmap = rotateBitmap(bitmap, orientation);
+    //}
+    //
+    //return bitmap;
   }
 
   private Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
