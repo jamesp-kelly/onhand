@@ -10,4 +10,5 @@ public interface HomePresenter {
   void loadPreviewImage(Uri selectedImage);
   void toggleService(boolean start);
   boolean updateSharedPrefs(String key, String uriString);
+  void onDestroy();
 }

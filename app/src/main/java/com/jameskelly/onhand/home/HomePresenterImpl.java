@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func0;
 import rx.schedulers.Schedulers;
@@ -25,6 +26,7 @@ public class HomePresenterImpl extends BasePresenterImpl implements HomePresente
   private HomeView homeView;
   private Context context;
   private SharedPreferences sharedPreferences;
+  private Subscription subscription;
 
   public HomePresenterImpl(HomeView homeView) {
     this.homeView = homeView;
@@ -45,7 +47,7 @@ public class HomePresenterImpl extends BasePresenterImpl implements HomePresente
   }
 
   @Override public void loadPreviewImage(final Uri selectedImage) {
-    getBitmapObservable(selectedImage)
+    subscription = getBitmapObservable(selectedImage)
         .subscribeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Subscriber<Bitmap>() {
@@ -98,5 +100,11 @@ public class HomePresenterImpl extends BasePresenterImpl implements HomePresente
         }
       }
     });
+  }
+
+  @Override public void onDestroy() {
+    if (subscription != null && !subscription.isUnsubscribed()) {
+      subscription.unsubscribe();
+    }
   }
 }

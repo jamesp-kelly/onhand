@@ -53,4 +53,9 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
   @Override public void hideWindow() {
     finish();
   }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    presenter.onDestroy();
+  }
 }

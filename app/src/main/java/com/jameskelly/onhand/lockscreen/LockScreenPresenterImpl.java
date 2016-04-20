@@ -11,6 +11,7 @@ import com.jameskelly.onhand.base.BasePresenterImpl;
 import java.io.IOException;
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func0;
 import rx.schedulers.Schedulers;
@@ -20,6 +21,7 @@ public class LockScreenPresenterImpl extends BasePresenterImpl implements LockSc
   private LockScreenView lockScreenView;
   private Context context;
   private SharedPreferences sharedPreferences;
+  private Subscription subscription;
 
   public LockScreenPresenterImpl(final LockScreenView lockScreenView) {
     this.lockScreenView = lockScreenView;
@@ -31,7 +33,7 @@ public class LockScreenPresenterImpl extends BasePresenterImpl implements LockSc
     String savedImageUri = sharedPreferences
         .getString(context.getString(R.string.shared_prefs_saved_image), "");
     if (!savedImageUri.isEmpty()) {
-      getBitmapObservable(Uri.parse(savedImageUri))
+      subscription = getBitmapObservable(Uri.parse(savedImageUri))
           .subscribeOn(Schedulers.computation())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(new Subscriber<Bitmap>() {
@@ -61,4 +63,9 @@ public class LockScreenPresenterImpl extends BasePresenterImpl implements LockSc
     });
   }
 
+  @Override public void onDestroy() {
+    if (subscription != null && !subscription.isUnsubscribed()) {
+      subscription.unsubscribe();
+    }
+  }
 }

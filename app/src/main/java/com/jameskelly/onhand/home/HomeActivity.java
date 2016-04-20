@@ -112,4 +112,9 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   @Override protected void onPause() {
     super.onPause();
   }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    presenter.onDestroy();
+  }
 }
