@@ -11,4 +11,5 @@ public interface HomePresenter {
   void toggleService(boolean start);
   boolean updateSharedPrefs(String key, String uriString);
   void onDestroy();
+  Uri loadUriFromPreferences(String name);
 }

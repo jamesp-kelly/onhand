@@ -24,6 +24,7 @@ public class LockScreenPresenterImpl extends BasePresenterImpl implements LockSc
   private Subscription subscription;
 
   public LockScreenPresenterImpl(final LockScreenView lockScreenView) {
+    super((Context) lockScreenView);
     this.lockScreenView = lockScreenView;
     this.context = (Context) lockScreenView;
     this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -68,4 +69,18 @@ public class LockScreenPresenterImpl extends BasePresenterImpl implements LockSc
       subscription.unsubscribe();
     }
   }
+
+  @Override public Uri loadUriFromPreferences(String name) {
+    return super.loadUriFromPreferences(name);
+  }
+
+  //@Override public Uri loadUriFromPreferences(String name) {
+  //  String savedImageUri =
+  //      sharedPreferences.getString(context.getString(R.string.shared_prefs_saved_image), "");
+  //  if (!savedImageUri.isEmpty()) {
+  //    return Uri.parse(savedImageUri);
+  //  } else {
+  //    return null;
+  //  }
+  //}
 }

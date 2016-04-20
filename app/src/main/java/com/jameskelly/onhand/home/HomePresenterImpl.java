@@ -29,6 +29,7 @@ public class HomePresenterImpl extends BasePresenterImpl implements HomePresente
   private Subscription subscription;
 
   public HomePresenterImpl(HomeView homeView) {
+    super((Context) homeView);
     this.homeView = homeView;
     this.context = (Context) homeView;
     sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -62,7 +63,7 @@ public class HomePresenterImpl extends BasePresenterImpl implements HomePresente
       }
 
       @Override public void onNext(Bitmap bitmap) {
-        homeView.showPreviewImage(bitmap);
+        //homeView.showPreviewImage(bitmap);
       }
     });
   }
@@ -106,5 +107,9 @@ public class HomePresenterImpl extends BasePresenterImpl implements HomePresente
     if (subscription != null && !subscription.isUnsubscribed()) {
       subscription.unsubscribe();
     }
+  }
+
+  @Override public Uri loadUriFromPreferences(String name) {
+    return super.loadUriFromPreferences(name);
   }
 }

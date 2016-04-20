@@ -1,23 +1,31 @@
 package com.jameskelly.onhand.base;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.preference.PreferenceManager;
+import com.jameskelly.onhand.R;
+import com.squareup.picasso.Picasso;
 import java.io.IOException;
 
 public class BasePresenterImpl implements BasePresenter {
-  @Override public Bitmap correctBitmapRotation(Context context, Uri imageUri) throws IOException {
-    ContentResolver cr = context.getContentResolver();
-    cr.notifyChange(imageUri, null);
-    Bitmap bitmap = null;
 
-    bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, imageUri);
+  private Context context;
+
+  @Override public Bitmap correctBitmapRotation(Context context, Uri imageUri) throws IOException {
+
+    return Picasso.with(context).load(imageUri).get();
+
+    //ContentResolver cr = context.getContentResolver();
+    //cr.notifyChange(imageUri, null);
+    //Bitmap bitmap = null;
+    //
+    //bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, imageUri);
 
     //temp!!
-    return bitmap;
+    //return bitmap;
 
     //ExifInterface exif = null;
     //try {
@@ -32,6 +40,10 @@ public class BasePresenterImpl implements BasePresenter {
     //}
     //
     //return bitmap;
+  }
+
+  public BasePresenterImpl(Context context) {
+    this.context = context;
   }
 
   private Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
@@ -73,6 +85,18 @@ public class BasePresenterImpl implements BasePresenter {
       return rotatedBitmap;
     } catch (OutOfMemoryError e) {
       e.printStackTrace();
+      return null;
+    }
+  }
+
+
+  @Override public Uri loadUriFromPreferences(String name) {
+    String savedImageUri =
+        PreferenceManager.getDefaultSharedPreferences(context)
+            .getString(context.getString(R.string.shared_prefs_saved_image), "");
+    if (!savedImageUri.isEmpty()) {
+      return Uri.parse(savedImageUri);
+    } else {
       return null;
     }
   }

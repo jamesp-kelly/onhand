@@ -1,12 +1,12 @@
 package com.jameskelly.onhand.home;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import com.jameskelly.onhand.base.BaseView;
 
 public interface HomeView extends BaseView {
 
-  void showPreviewImage(Bitmap previewBitmap);
+  void showPreviewImage(Uri imageUri, boolean useCache);
   void showPreviewError();
 
   void startCamera(Intent intent);

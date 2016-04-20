@@ -8,4 +8,5 @@ import java.io.IOException;
 public interface BasePresenter {
 
   Bitmap correctBitmapRotation(Context context, Uri imageUri) throws IOException;
+  Uri loadUriFromPreferences(String name);
 }

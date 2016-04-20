@@ -2,7 +2,6 @@ package com.jameskelly.onhand.home;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,6 +18,10 @@ import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.di.HomeModule;
 import com.jameskelly.onhand.di.OnHandApplication;
 import com.jameskelly.onhand.service.OnHandServiceImpl;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 import javax.inject.Inject;
 
 public class HomeActivity extends AppCompatActivity implements HomeView {
@@ -39,7 +42,13 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     bindDI();
 
     //if there's an image saved in SharedPreferences, display it
-    presenter.loadPreviewImageFromPrefs();
+    //presenter.loadPreviewImageFromPrefs();
+
+    //Picasso.with(this).load(presenter.loadUriFromPreferences(
+    //    getString(R.string.shared_prefs_saved_image))).into(imagePreview);
+
+    showPreviewImage(presenter.loadUriFromPreferences(getString(
+        R.string.shared_prefs_saved_image)), true);
   }
 
   @Override public void bindDI() {
@@ -65,8 +74,14 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     presenter.toggleService(!OnHandServiceImpl.isServiceRunning(this));
   }
 
-  @Override public void showPreviewImage(Bitmap previewBitmap) {
-    imagePreview.setImageBitmap(previewBitmap);
+  @Override public void showPreviewImage(Uri imageUri, boolean useCache) {
+
+    RequestCreator requestCreator = Picasso.with(this).load(imageUri);
+    if (!useCache) {
+      requestCreator.memoryPolicy(MemoryPolicy.NO_CACHE)
+          .networkPolicy(NetworkPolicy.NO_CACHE);
+    }
+    requestCreator.into(imagePreview);
     startServiceFab.setVisibility(View.VISIBLE);
   }
 
@@ -96,13 +111,13 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     switch (requestCode) {
       case TAKE_PICTURE_REQUEST_CODE: {
         if (resultCode == Activity.RESULT_OK) {
-          presenter.loadPreviewImage(imageUri);
+          showPreviewImage(imageUri, false); //picasso doesn't update the imageView if cache is allowed
         }
         break;
       }
       case LOAD_GALLERY_REQUEST_CODE: {
         if (resultCode == Activity.RESULT_OK) {
-          presenter.loadPreviewImage(data.getData());
+          showPreviewImage(data.getData(), false);
         }
         break;
       }

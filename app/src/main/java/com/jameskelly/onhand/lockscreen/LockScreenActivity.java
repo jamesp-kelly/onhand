@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.di.LockScreenModule;
 import com.jameskelly.onhand.di.OnHandApplication;
+import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
 public class LockScreenActivity extends AppCompatActivity implements LockScreenView {
@@ -34,8 +35,8 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
     bindDI();
     setupWindow();
 
-    Log.i("TAG", "now loading image from prefs");
-    presenter.loadSavedImageFromPrefs();
+    Picasso.with(this).load(presenter.loadUriFromPreferences(
+        getString(R.string.shared_prefs_saved_image))).into(lockscreenImage);
   }
 
   //set flags so window appears over lockscreen
@@ -56,6 +57,7 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
         .inject(this);
   }
 
+  //todo remove images unused after picasso
   @Override public void showImage(Bitmap savedImage) {
     Log.i("TAG", "now setting image");
     lockscreenImage.setImageBitmap(savedImage);
