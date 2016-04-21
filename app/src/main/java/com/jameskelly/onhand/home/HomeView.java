@@ -6,7 +6,7 @@ import com.jameskelly.onhand.base.BaseView;
 
 public interface HomeView extends BaseView {
 
-  void showPreviewImage(Uri imageUri, boolean useCache);
+  void showPreviewImage(Uri imageUri, boolean skipCacheLookup);
   void showPreviewError();
 
   void startCamera(Intent intent);

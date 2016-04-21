@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -37,8 +38,8 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
 
     Picasso picasso = Picasso.with(this);
     picasso.setIndicatorsEnabled(true);
-    picasso.load(presenter.loadUriFromPreferences(
-        getString(R.string.shared_prefs_saved_image))).into(lockscreenImage);
+    Uri loadedImage = presenter.loadUriFromPreferences(getString(R.string.shared_prefs_saved_image));
+    picasso.load(loadedImage).into(lockscreenImage);
   }
 
   //set flags so window appears over lockscreen

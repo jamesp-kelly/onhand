@@ -2,12 +2,15 @@ package com.jameskelly.onhand.home;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -22,6 +25,7 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
+import com.squareup.picasso.Target;
 import javax.inject.Inject;
 
 public class HomeActivity extends AppCompatActivity implements HomeView {
@@ -41,14 +45,8 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     setContentView(R.layout.activity_home);
     bindDI();
 
-    //if there's an image saved in SharedPreferences, display it
-    //presenter.loadPreviewImageFromPrefs();
-
-    //Picasso.with(this).load(presenter.loadUriFromPreferences(
-    //    getString(R.string.shared_prefs_saved_image))).into(imagePreview);
-
     showPreviewImage(presenter.loadUriFromPreferences(getString(
-        R.string.shared_prefs_saved_image)), true);
+        R.string.shared_prefs_saved_image)), false);
   }
 
   @Override public void bindDI() {
@@ -74,17 +72,19 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     presenter.toggleService(!OnHandServiceImpl.isServiceRunning(this));
   }
 
-  @Override public void showPreviewImage(Uri imageUri, boolean useCache) {
+  @Override public void showPreviewImage(final Uri imageUri, boolean skipCacheLookup) {
 
     Picasso picasso = Picasso.with(this);
     picasso.setIndicatorsEnabled(true);
     RequestCreator requestCreator = picasso.load(imageUri);
 
-    if (!useCache) {
+    if (skipCacheLookup) {
       requestCreator.memoryPolicy(MemoryPolicy.NO_CACHE)
           .networkPolicy(NetworkPolicy.NO_CACHE);
     }
-    requestCreator.into(imagePreview);
+
+    requestCreator.into(imagePreviewTarget);
+
     startServiceFab.setVisibility(View.VISIBLE);
   }
 
@@ -114,13 +114,13 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     switch (requestCode) {
       case TAKE_PICTURE_REQUEST_CODE: {
         if (resultCode == Activity.RESULT_OK) {
-          showPreviewImage(imageUri, false); //picasso doesn't update the imageView if cache is allowed
+          showPreviewImage(imageUri, true); //picasso doesn't update the imageView if cache is allowed
         }
         break;
       }
       case LOAD_GALLERY_REQUEST_CODE: {
         if (resultCode == Activity.RESULT_OK) {
-          showPreviewImage(data.getData(), false);
+          showPreviewImage(data.getData(), true);
         }
         break;
       }
@@ -128,6 +128,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   }
 
   @Override protected void onPause() {
+    Log.i(HomeActivity.class.getSimpleName(), "onPause");
     super.onPause();
   }
 
@@ -135,4 +136,19 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     super.onDestroy();
     presenter.onDestroy();
   }
+
+  private Target imagePreviewTarget = new Target() {
+    @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+      imagePreview.setImageBitmap(bitmap);
+      presenter.updateSharedPrefs(HomeActivity.this.getString(R.string.shared_prefs_saved_image),
+          imageUri.toString());
+    }
+
+    @Override public void onBitmapFailed(Drawable errorDrawable) {
+      showPreviewError();
+    }
+
+    @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
+    }
+  };
 }

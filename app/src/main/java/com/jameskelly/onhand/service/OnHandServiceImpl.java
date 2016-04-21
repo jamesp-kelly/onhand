@@ -40,12 +40,11 @@ public class OnHandServiceImpl extends Service implements OnHandService {
 
   private final BroadcastReceiver receiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
-      Log.i("TAG", "in onReceive()");
+      Log.i(OnHandServiceImpl.class.getSimpleName(), "in onReceive()");
       if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
         Intent i = new Intent(OnHandServiceImpl.this, LockScreenActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
-
       } else if (intent.getAction().equals(STOP_SERVICE)) {
         OnHandServiceImpl.this.stopSelf();
       }
