@@ -76,7 +76,10 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   @Override public void showPreviewImage(Uri imageUri, boolean useCache) {
 
-    RequestCreator requestCreator = Picasso.with(this).load(imageUri);
+    Picasso picasso = Picasso.with(this);
+    picasso.setIndicatorsEnabled(true);
+    RequestCreator requestCreator = picasso.load(imageUri);
+
     if (!useCache) {
       requestCreator.memoryPolicy(MemoryPolicy.NO_CACHE)
           .networkPolicy(NetworkPolicy.NO_CACHE);

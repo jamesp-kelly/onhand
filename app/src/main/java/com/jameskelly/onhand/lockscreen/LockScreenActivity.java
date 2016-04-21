@@ -35,7 +35,9 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
     bindDI();
     setupWindow();
 
-    Picasso.with(this).load(presenter.loadUriFromPreferences(
+    Picasso picasso = Picasso.with(this);
+    picasso.setIndicatorsEnabled(true);
+    picasso.load(presenter.loadUriFromPreferences(
         getString(R.string.shared_prefs_saved_image))).into(lockscreenImage);
   }
 

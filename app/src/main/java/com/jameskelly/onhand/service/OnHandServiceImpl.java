@@ -24,8 +24,12 @@ public class OnHandServiceImpl extends Service implements OnHandService {
   private static final int ONHAND_NOTIFICATION_ID = 1111;
   private static final String STOP_SERVICE = "com.jameskelly.onhand.StopService";
 
+  private NotificationManager notificationManager;
+
   @Override public void onCreate() {
     super.onCreate();
+
+    notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
     IntentFilter filter = new IntentFilter();
     filter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -60,6 +64,8 @@ public class OnHandServiceImpl extends Service implements OnHandService {
     Log.i(OnHandServiceImpl.class.getSimpleName(), "destroying service");
     unregisterReceiver(receiver);
 
+    notificationManager.cancel(ONHAND_NOTIFICATION_ID);
+
     //kill lockscreen activity
     Intent finishLockScreenIntent = new Intent(getString(R.string.finish_lockscreen_activity));
     sendBroadcast(finishLockScreenIntent);
@@ -89,9 +95,7 @@ public class OnHandServiceImpl extends Service implements OnHandService {
         .addAction(R.drawable.ic_info_black_24dp, getString(R.string.notification_cancel), stopPendingIntent)
         .setContentIntent(homePendingIntent)
         .setDeleteIntent(stopPendingIntent);
-
-    NotificationManager notificationManager =
-        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    
     notificationManager.notify(ONHAND_NOTIFICATION_ID, builder.build());
   }
 
