@@ -43,10 +43,9 @@ public class OnHandServiceImpl extends Service implements OnHandService {
       Log.i("TAG", "in onReceive()");
       if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
         Intent i = new Intent(OnHandServiceImpl.this, LockScreenActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            .addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-            .addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
+
       } else if (intent.getAction().equals(STOP_SERVICE)) {
         OnHandServiceImpl.this.stopSelf();
       }
@@ -95,7 +94,7 @@ public class OnHandServiceImpl extends Service implements OnHandService {
         .addAction(R.drawable.ic_info_black_24dp, getString(R.string.notification_cancel), stopPendingIntent)
         .setContentIntent(homePendingIntent)
         .setDeleteIntent(stopPendingIntent);
-    
+
     notificationManager.notify(ONHAND_NOTIFICATION_ID, builder.build());
   }
 
