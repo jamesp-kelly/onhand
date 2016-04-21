@@ -139,9 +139,11 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   private Target imagePreviewTarget = new Target() {
     @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-      imagePreview.setImageBitmap(bitmap);
-      presenter.updateSharedPrefs(HomeActivity.this.getString(R.string.shared_prefs_saved_image),
-          imageUri.toString());
+      if (imageUri != null) {
+        imagePreview.setImageBitmap(bitmap);
+        presenter.updateSharedPrefs(HomeActivity.this.getString(R.string.shared_prefs_saved_image),
+            imageUri.toString());
+      }
     }
 
     @Override public void onBitmapFailed(Drawable errorDrawable) {
