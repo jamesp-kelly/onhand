@@ -34,6 +34,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   private static final int LOAD_GALLERY_REQUEST_CODE = 2;
 
   private Uri imageUri;
+  private RequestCreator requestCreator;
 
   @Bind(R.id.image_preview) ImageView imagePreview;
   @Bind(R.id.start_service_fab) FloatingActionButton startServiceFab;
@@ -73,20 +74,35 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   }
 
   @Override public void showPreviewImage(final Uri imageUri, boolean skipCacheLookup) {
-
     Picasso picasso = Picasso.with(this);
     picasso.setIndicatorsEnabled(true);
-    RequestCreator requestCreator = picasso.load(imageUri);
+    requestCreator = picasso.load(imageUri)
+        .resize(1920, 1920).centerInside(); //centerInside means the ratio will be kept with largest dimension 1920
 
     if (skipCacheLookup) {
       requestCreator.memoryPolicy(MemoryPolicy.NO_CACHE)
           .networkPolicy(NetworkPolicy.NO_CACHE);
     }
-
     requestCreator.into(imagePreviewTarget);
 
     startServiceFab.setVisibility(View.VISIBLE);
   }
+
+  private Target imagePreviewTarget = new Target() {
+    @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+      if (imageUri != null) {
+        requestCreator.into(imagePreview);
+
+        presenter.updateSharedPrefs(HomeActivity.this.getString(R.string.shared_prefs_saved_image),
+            imageUri.toString());
+      }
+    }
+
+    @Override public void onBitmapFailed(Drawable errorDrawable) {
+      showPreviewError();
+    }
+    @Override public void onPrepareLoad(Drawable placeHolderDrawable) {}
+  };
 
   @Override public void showPreviewError() {
     Toast.makeText(this, "Error loading image", Toast.LENGTH_SHORT).show();
@@ -136,21 +152,4 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     super.onDestroy();
     presenter.onDestroy();
   }
-
-  private Target imagePreviewTarget = new Target() {
-    @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-      if (imageUri != null) {
-        imagePreview.setImageBitmap(bitmap);
-        presenter.updateSharedPrefs(HomeActivity.this.getString(R.string.shared_prefs_saved_image),
-            imageUri.toString());
-      }
-    }
-
-    @Override public void onBitmapFailed(Drawable errorDrawable) {
-      showPreviewError();
-    }
-
-    @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
-    }
-  };
 }

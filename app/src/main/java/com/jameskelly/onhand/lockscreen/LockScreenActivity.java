@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,9 +18,13 @@ import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.di.LockScreenModule;
 import com.jameskelly.onhand.di.OnHandApplication;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
+import com.squareup.picasso.Target;
 import javax.inject.Inject;
 
 public class LockScreenActivity extends AppCompatActivity implements LockScreenView {
+
+  private RequestCreator requestCreator;
 
   @Bind(R.id.lockscreen_image) ImageView lockscreenImage;
 
@@ -36,13 +41,26 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
     bindDI();
     setupWindow();
 
+    Uri loadedImage = presenter.loadUriFromPreferences(
+        getString(R.string.shared_prefs_saved_image));
+
     Picasso picasso = Picasso.with(this);
     picasso.setIndicatorsEnabled(true);
-    Uri loadedImage = presenter.loadUriFromPreferences(getString(R.string.shared_prefs_saved_image));
-    picasso.load(loadedImage).into(lockscreenImage);
+    requestCreator = picasso.load(loadedImage).resize(1920, 1920).centerInside();
+    requestCreator.into(lockScreenTarget);
   }
 
-  //set flags so window appears over lockscreen
+  private Target lockScreenTarget = new Target() {
+    @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+      requestCreator.into(lockscreenImage);
+    }
+
+    @Override public void onBitmapFailed(Drawable errorDrawable) {}
+
+    @Override public void onPrepareLoad(Drawable placeHolderDrawable) {}
+  };
+
+  //set flags so window appears over lock screen
   @Override public void setupWindow() {
     this.getWindow().setFlags(
         WindowManager.LayoutParams.FLAG_FULLSCREEN |
