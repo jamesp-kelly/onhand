@@ -46,8 +46,10 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     setContentView(R.layout.activity_home);
     bindDI();
 
-    showPreviewImage(presenter.loadUriFromPreferences(getString(
-        R.string.shared_prefs_saved_image)), false);
+    imageUri = presenter.loadUriFromPreferences
+        (getString(R.string.shared_prefs_saved_image));
+
+    showPreviewImage(imageUri, false);
   }
 
   @Override public void bindDI() {

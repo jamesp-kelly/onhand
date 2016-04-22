@@ -92,8 +92,7 @@ public class BasePresenterImpl implements BasePresenter {
 
   @Override public Uri loadUriFromPreferences(String name) {
     String savedImageUri =
-        PreferenceManager.getDefaultSharedPreferences(context)
-            .getString(context.getString(R.string.shared_prefs_saved_image), "");
+        PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.shared_prefs_saved_image), "");
     if (!savedImageUri.isEmpty()) {
       return Uri.parse(savedImageUri);
     } else {
