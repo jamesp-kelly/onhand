@@ -2,6 +2,7 @@ package com.jameskelly.onhand.service;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -9,6 +10,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -16,8 +21,10 @@ import android.util.Log;
 import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.home.HomeActivity;
 import com.jameskelly.onhand.lockscreen.LockScreenActivity;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
-import static android.support.v4.app.NotificationCompat.PRIORITY_MAX;
+import static android.support.v4.app.NotificationCompat.PRIORITY_HIGH;
 
 public class OnHandServiceImpl extends Service implements OnHandService {
 
@@ -53,7 +60,10 @@ public class OnHandServiceImpl extends Service implements OnHandService {
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     Log.i(OnHandServiceImpl.class.getSimpleName(), "starting service");
-    createNotification();
+    Uri onHandImageUri = intent.getParcelableExtra("onHandImageUri");
+
+    //load image, start notification in image loaded callback
+    Picasso.with(this).load(onHandImageUri).into(notificationImageTarget);
 
     return START_NOT_STICKY;
   }
@@ -73,7 +83,7 @@ public class OnHandServiceImpl extends Service implements OnHandService {
     return null;
   }
 
-  @Override public void createNotification() {
+  @Override public void createNotification(Bitmap notificationBitmap) {
     Intent homeIntent = new Intent(this, HomeActivity.class);
     homeIntent.setAction(Intent.ACTION_MAIN);
     homeIntent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -85,14 +95,20 @@ public class OnHandServiceImpl extends Service implements OnHandService {
 
     NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
     builder.setAutoCancel(false)
-        .setPriority(PRIORITY_MAX)
+        .setPriority(PRIORITY_HIGH)
         .setContentTitle(getString(R.string.notification_content_title))
         .setContentText(getString(R.string.notification_content_text))
         .setSmallIcon(android.R.drawable.stat_sys_warning)
         .setTicker(getString(R.string.notification_ticker))
         .addAction(R.drawable.ic_info_black_24dp, getString(R.string.notification_cancel), stopPendingIntent)
         .setContentIntent(homePendingIntent)
-        .setDeleteIntent(stopPendingIntent);
+        .setDeleteIntent(stopPendingIntent)
+        .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(notificationBitmap));
+
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      builder.setCategory(Notification.CATEGORY_SERVICE);
+    }
 
     notificationManager.notify(ONHAND_NOTIFICATION_ID, builder.build());
   }
@@ -106,4 +122,18 @@ public class OnHandServiceImpl extends Service implements OnHandService {
     }
     return false;
   }
+
+  private Target notificationImageTarget = new Target() {
+    @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+      createNotification(bitmap);
+    }
+
+    @Override public void onBitmapFailed(Drawable errorDrawable) {
+
+    }
+
+    @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+    }
+  };
 }

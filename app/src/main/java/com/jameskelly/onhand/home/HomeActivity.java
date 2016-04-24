@@ -72,7 +72,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   @OnClick(R.id.start_service_fab)
   public void startServiceClicked() {
-    presenter.toggleService(!OnHandServiceImpl.isServiceRunning(this));
+    presenter.toggleService(!OnHandServiceImpl.isServiceRunning(this), imageUri);
   }
 
   @Override public void showPreviewImage(final Uri imageUri, boolean skipCacheLookup) {

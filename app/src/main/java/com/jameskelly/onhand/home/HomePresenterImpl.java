@@ -76,8 +76,9 @@ public class HomePresenterImpl extends BasePresenterImpl implements HomePresente
     }
   }
 
-  @Override public void toggleService(boolean start) {
+  @Override public void toggleService(boolean start, Uri imageUri) {
     Intent intent = new Intent(context, OnHandServiceImpl.class);
+    intent.putExtra("onHandImageUri", imageUri);
     if (start) {
       homeView.startOnHandService(intent);
     } else {

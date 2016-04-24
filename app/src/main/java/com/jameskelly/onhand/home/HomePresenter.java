@@ -8,7 +8,7 @@ public interface HomePresenter {
 
   void loadPreviewImageFromPrefs();
   void loadPreviewImage(Uri selectedImage);
-  void toggleService(boolean start);
+  void toggleService(boolean start, Uri imageUri);
   boolean updateSharedPrefs(String key, String uriString);
   void onDestroy();
   Uri loadUriFromPreferences(String name);

@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import butterknife.Bind;
@@ -48,6 +49,14 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
     picasso.setIndicatorsEnabled(true);
     requestCreator = picasso.load(loadedImage).resize(1920, 1920).centerInside();
     requestCreator.into(lockScreenTarget);
+
+
+    //temp
+    lockscreenImage.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        finish();
+      }
+    });
   }
 
   private Target lockScreenTarget = new Target() {
