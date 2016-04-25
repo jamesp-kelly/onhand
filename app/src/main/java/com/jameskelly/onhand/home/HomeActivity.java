@@ -6,11 +6,11 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -26,6 +26,7 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
+import java.io.File;
 import javax.inject.Inject;
 
 public class HomeActivity extends AppCompatActivity implements HomeView {
@@ -45,11 +46,11 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home);
     bindDI();
+  }
 
-    imageUri = presenter.loadUriFromPreferences
-        (getString(R.string.shared_prefs_saved_image));
-
-    showPreviewImage(imageUri, false);
+  @Override protected void onResume() {
+    super.onResume();
+    presenter.loadPreviewImage(getString(R.string.shared_prefs_saved_image));
   }
 
   @Override public void bindDI() {
@@ -62,17 +63,17 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   @OnClick(R.id.camera_button)
   public void cameraClicked() {
-    presenter.openCamera();
+    startCamera();
   }
 
   @OnClick(R.id.gallery_button)
   public void galleryClicked() {
-    presenter.openGallery();
+    startGallery();
   }
 
   @OnClick(R.id.start_service_fab)
   public void startServiceClicked() {
-    presenter.toggleService(!OnHandServiceImpl.isServiceRunning(this), imageUri);
+    toggleOnHandService();
   }
 
   @Override public void showPreviewImage(final Uri imageUri, boolean skipCacheLookup) {
@@ -92,12 +93,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   private Target imagePreviewTarget = new Target() {
     @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-      if (imageUri != null) {
-        requestCreator.into(imagePreview);
-
-        presenter.updateSharedPrefs(HomeActivity.this.getString(R.string.shared_prefs_saved_image),
-            imageUri.toString());
-      }
+      requestCreator.into(imagePreview);
     }
 
     @Override public void onBitmapFailed(Drawable errorDrawable) {
@@ -110,21 +106,29 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     Toast.makeText(this, "Error loading image", Toast.LENGTH_SHORT).show();
   }
 
-  @Override public void startCamera(Intent intent) {
-    imageUri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+  @Override public void startCamera() {
+    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    File photo = new File(Environment.getExternalStorageDirectory(), "ON_HAND_CAPTURE.jpg");
+    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
     startActivityForResult(intent, TAKE_PICTURE_REQUEST_CODE);
   }
 
-  @Override public void startGallery(Intent intent) {
+  @Override public void startGallery() {
+    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
     startActivityForResult(intent, LOAD_GALLERY_REQUEST_CODE);
   }
 
-  @Override public void startOnHandService(Intent intent) {
-    startService(intent);
-  }
+  @Override public void toggleOnHandService() {
+    Intent intent = new Intent(this, OnHandServiceImpl.class);
+    intent.putExtra("onHandImageUri", imageUri);
 
-  @Override public void stopOnHandService(Intent intent) {
-    stopService(intent);
+    if (OnHandServiceImpl.isServiceRunning(this)) {
+      stopService(intent);
+      //todo: update sharedPrefs/ScreenObject
+    } else {
+      startService(intent);
+      //todo: update sharedPrefs/ScreenObject
+    }
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -145,13 +149,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     }
   }
 
-  @Override protected void onPause() {
-    Log.i(HomeActivity.class.getSimpleName(), "onPause");
-    super.onPause();
-  }
-
   @Override protected void onDestroy() {
     super.onDestroy();
-    presenter.onDestroy();
   }
 }

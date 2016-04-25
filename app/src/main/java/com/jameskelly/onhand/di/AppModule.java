@@ -1,7 +1,9 @@
 package com.jameskelly.onhand.di;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.preference.PreferenceManager;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
@@ -26,4 +28,9 @@ public class AppModule {
     return application.getResources();
   }
 
+  @Provides
+  @Singleton
+  protected SharedPreferences provideSharedPreferences() {
+    return PreferenceManager.getDefaultSharedPreferences(application);
+  }
 }
