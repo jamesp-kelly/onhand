@@ -36,6 +36,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   private Uri imageUri;
   private RequestCreator requestCreator;
+  private boolean loadFromCamera = false;
 
   @Bind(R.id.image_preview) ImageView imagePreview;
   @Bind(R.id.start_service_fab) FloatingActionButton startServiceFab;
@@ -48,9 +49,16 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     bindDI();
   }
 
+  @Override protected void onPause() {
+    super.onPause();
+    loadFromCamera = true;
+  }
+
   @Override protected void onResume() {
     super.onResume();
-    presenter.loadPreviewImage(getString(R.string.shared_prefs_saved_image));
+    if (!loadFromCamera) {
+      presenter.loadPreviewImage(-1);
+    }
   }
 
   @Override public void bindDI() {
@@ -109,7 +117,8 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   @Override public void startCamera() {
     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     File photo = new File(Environment.getExternalStorageDirectory(), "ON_HAND_CAPTURE.jpg");
-    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+    imageUri = Uri.fromFile(photo);
+    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
     startActivityForResult(intent, TAKE_PICTURE_REQUEST_CODE);
   }
 
@@ -136,12 +145,14 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     switch (requestCode) {
       case TAKE_PICTURE_REQUEST_CODE: {
         if (resultCode == Activity.RESULT_OK) {
+          loadFromCamera = true;
           showPreviewImage(imageUri, true); //picasso doesn't update the imageView if cache is allowed
         }
         break;
       }
       case LOAD_GALLERY_REQUEST_CODE: {
         if (resultCode == Activity.RESULT_OK) {
+          loadFromCamera = true;
           showPreviewImage(data.getData(), true);
         }
         break;
