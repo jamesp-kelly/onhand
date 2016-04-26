@@ -55,6 +55,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     setContentView(R.layout.activity_home);
     bindDI();
 
+    presenter.onViewCreated();
     picturesOutputFolder = new File(
         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "OnHand");
   }
@@ -67,7 +68,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   @Override protected void onResume() {
     super.onResume();
     if (!loadFromCamera) {
-      presenter.loadPreviewImage(2);
+      presenter.loadPreviewImage(1);
     }
   }
 
@@ -175,5 +176,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   @Override protected void onDestroy() {
     super.onDestroy();
+    presenter.onViewDestroyed();
   }
 }

@@ -14,8 +14,16 @@ public class RealmScreenObjectRepository implements ScreenObjectRepository {
 
   public RealmScreenObjectRepository(Context context) {
     this.context = context;
+  }
+
+  @Override public void setupConnection() {
     realmConfiguration = new RealmConfiguration.Builder(context).build();
     realm = Realm.getInstance(realmConfiguration);
+  }
+
+  @Override public void closeConnection() {
+    if (realm != null && !realm.isClosed())
+      realm.close();
   }
 
   @Override public ScreenObject getScreenObject(int screenObjectId) {
@@ -46,15 +54,5 @@ public class RealmScreenObjectRepository implements ScreenObjectRepository {
     realm.commitTransaction();
 
     return screenObject;
-  }
-
-  @Override public void closeConnection() {
-    if (realm != null && !realm.isClosed())
-    realm.close();
-  }
-
-  @Override protected void finalize() throws Throwable {
-    super.finalize();
-    //closeConnection(); //todo: better way to close realm needed
   }
 }

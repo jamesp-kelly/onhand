@@ -15,11 +15,21 @@ public class HomePresenterImpl implements HomePresenter {
 
   @Override public void loadPreviewImage(int screenObjectId) {
     ScreenObject screenObject = screenObjectRepository.getScreenObject(screenObjectId);
-    homeView.showPreviewImage(screenObject.getImageUriString(), false);
+    if (screenObject != null) {
+      homeView.showPreviewImage(screenObject.getImageUriString(), false);
+    }
   }
 
   @Override public void createScreenObject(String uriString) {
     ScreenObject screenObject = screenObjectRepository.createScreenObject(uriString, null);
     homeView.showPreviewImage(screenObject.getImageUriString(), true);
+  }
+
+  @Override public void onViewCreated() {
+    screenObjectRepository.setupConnection();
+  }
+
+  @Override public void onViewDestroyed() {
+    screenObjectRepository.closeConnection();
   }
 }

@@ -3,4 +3,6 @@ package com.jameskelly.onhand.home;
 public interface HomePresenter {
   void loadPreviewImage(int screenObjectId);
   void createScreenObject(String uriString);
+  void onViewCreated();
+  void onViewDestroyed();
 }
