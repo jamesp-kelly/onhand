@@ -1,11 +1,10 @@
 package com.jameskelly.onhand.home;
 
-import android.net.Uri;
 import com.jameskelly.onhand.base.BaseView;
 
 public interface HomeView extends BaseView {
 
-  void showPreviewImage(Uri imageUri, boolean skipCacheLookup);
+  void showPreviewImage(String imageUriString, boolean skipCacheLookup);
   void showPreviewError();
 
   void startCamera();

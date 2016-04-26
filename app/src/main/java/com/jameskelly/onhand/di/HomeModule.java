@@ -1,11 +1,12 @@
 package com.jameskelly.onhand.di;
 
+import android.app.Application;
 import android.content.SharedPreferences;
 import com.jameskelly.onhand.home.HomePresenter;
 import com.jameskelly.onhand.home.HomePresenterImpl;
 import com.jameskelly.onhand.home.HomeView;
 import com.jameskelly.onhand.repository.ScreenObjectRepository;
-import com.jameskelly.onhand.repository.ScreenObjectRepositoryImpl;
+import com.jameskelly.onhand.repository.RealmScreenObjectRepository;
 import dagger.Module;
 import dagger.Provides;
 
@@ -26,8 +27,8 @@ public class HomeModule {
 
   @Provides
   @ActivityScope
-  public ScreenObjectRepository provideScreenObjectRepository(SharedPreferences sharedPreferences) {
-    return new ScreenObjectRepositoryImpl(sharedPreferences);
+  public ScreenObjectRepository provideScreenObjectRepository(Application application) {
+    return new RealmScreenObjectRepository(application.getApplicationContext());
   }
 
   @Provides

@@ -1,20 +1,52 @@
 package com.jameskelly.onhand.model;
 
-import android.net.Uri;
+import io.realm.RealmObject;
 
-public class ScreenObject {
-  private Uri uri;
-  //private int id; todo: store previously used screens
+public class ScreenObject extends RealmObject {
 
-  public ScreenObject(Uri uri) {
-    this.uri = uri;
+  private long id;
+  private String imageUriString; //Uri type is unsupported by Realm
+  private long createdTimeStamp;
+  private boolean isActive;
+  private String message;
+
+  public long getId() {
+    return id;
   }
 
-  public Uri getUri() {
-    return uri;
+  public void setId(long id) {
+    this.id = id;
   }
 
-  public void setUri(Uri uri) {
-    this.uri = uri;
+  public String getImageUriString() {
+    return imageUriString;
+  }
+
+  public void setImageUriString(String imageUriString) {
+    this.imageUriString = imageUriString;
+  }
+
+  public long getCreatedTimeStamp() {
+    return createdTimeStamp;
+  }
+
+  public void setCreatedTimeStamp(long createdTimeStamp) {
+    this.createdTimeStamp = createdTimeStamp;
+  }
+
+  public boolean isActive() {
+    return isActive;
+  }
+
+  public void setActive(boolean active) {
+    isActive = active;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
   }
 }

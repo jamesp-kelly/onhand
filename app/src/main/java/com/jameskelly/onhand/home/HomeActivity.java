@@ -51,13 +51,13 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   @Override protected void onPause() {
     super.onPause();
-    loadFromCamera = true;
+    loadFromCamera = false;
   }
 
   @Override protected void onResume() {
     super.onResume();
     if (!loadFromCamera) {
-      presenter.loadPreviewImage(-1);
+      presenter.loadPreviewImage(2);
     }
   }
 
@@ -84,7 +84,8 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     toggleOnHandService();
   }
 
-  @Override public void showPreviewImage(final Uri imageUri, boolean skipCacheLookup) {
+  @Override public void showPreviewImage(final String imageUriString, boolean skipCacheLookup) {
+    Uri imageUri = Uri.parse(imageUriString);
     Picasso picasso = Picasso.with(this);
     picasso.setIndicatorsEnabled(true);
     requestCreator = picasso.load(imageUri)
@@ -146,14 +147,14 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
       case TAKE_PICTURE_REQUEST_CODE: {
         if (resultCode == Activity.RESULT_OK) {
           loadFromCamera = true;
-          showPreviewImage(imageUri, true); //picasso doesn't update the imageView if cache is allowed
+          presenter.createScreenObject(imageUri.toString());
         }
         break;
       }
       case LOAD_GALLERY_REQUEST_CODE: {
         if (resultCode == Activity.RESULT_OK) {
           loadFromCamera = true;
-          showPreviewImage(data.getData(), true);
+          presenter.createScreenObject(data.getDataString());
         }
         break;
       }
