@@ -27,6 +27,10 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import javax.inject.Inject;
 
 public class HomeActivity extends AppCompatActivity implements HomeView {
@@ -37,6 +41,9 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   private Uri imageUri;
   private RequestCreator requestCreator;
   private boolean loadFromCamera = false;
+  private File picturesOutputFolder;
+  private final DateFormat imageNameFormat =
+      new SimpleDateFormat("'OnHand_'yyyy-MM-dd-HH-mm-ss'.jpeg'", Locale.US);
 
   @Bind(R.id.image_preview) ImageView imagePreview;
   @Bind(R.id.start_service_fab) FloatingActionButton startServiceFab;
@@ -47,6 +54,9 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home);
     bindDI();
+
+    picturesOutputFolder = new File(
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "OnHand");
   }
 
   @Override protected void onPause() {
@@ -117,8 +127,10 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   @Override public void startCamera() {
     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    File photo = new File(Environment.getExternalStorageDirectory(), "ON_HAND_CAPTURE.jpg");
+    String fileName = imageNameFormat.format(new Date());
+    File photo = new File(picturesOutputFolder, fileName);
     imageUri = Uri.fromFile(photo);
+
     intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
     startActivityForResult(intent, TAKE_PICTURE_REQUEST_CODE);
   }

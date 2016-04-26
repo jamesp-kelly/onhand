@@ -29,6 +29,7 @@ public class RealmScreenObjectRepository implements ScreenObjectRepository {
   @Override public ScreenObject createScreenObject(String uriString, String message) {
 
     realm.beginTransaction();
+
     ScreenObject screenObject = realm.createObject(ScreenObject.class);
     int key;
     try {
@@ -54,6 +55,6 @@ public class RealmScreenObjectRepository implements ScreenObjectRepository {
 
   @Override protected void finalize() throws Throwable {
     super.finalize();
-    closeConnection(); //todo: better way to close realm needed
+    //closeConnection(); //todo: better way to close realm needed
   }
 }
