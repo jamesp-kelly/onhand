@@ -15,10 +15,10 @@ public class ArchivePresenterImpl implements ArchivePresenter {
   }
 
   @Override public void loadScreenObjects() {
-    List<ScreenObject> screenObjects =
+    final List<ScreenObject> previousScreenObjects =
         screenObjectRepository.getAllPreviousScreenObjects();
 
-    archiveView.displayScreenObjects(screenObjects);
+    archiveView.displayScreenObjects(previousScreenObjects);
   }
 
   @Override public void onViewCreated() {
