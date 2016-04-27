@@ -9,6 +9,8 @@ public interface ScreenObjectRepository {
   ScreenObject getActiveScreenObject();
   List<ScreenObject> getAllPreviousScreenObjects();
 
+  void activateScreenObject(int id);
+
   void detailScreenObjects();
 
   ScreenObject createScreenObject(String uriString, String message);

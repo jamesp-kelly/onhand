@@ -11,4 +11,5 @@ public interface AppComponent {
   Application application();
   HomeComponent plus(HomeModule homeModule);
   LockScreenComponent plus(LockScreenModule lockScreenModule);
+  ArchiveComponent plus(ArchiveModule archiveModule);
 }

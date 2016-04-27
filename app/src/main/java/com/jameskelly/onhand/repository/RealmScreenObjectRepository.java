@@ -44,6 +44,18 @@ public class RealmScreenObjectRepository implements ScreenObjectRepository {
     return realm.where(ScreenObject.class).equalTo("isActive", false).findAll();
   }
 
+  @Override public void activateScreenObject(int id) {
+    ScreenObject screenObject = realm.where(ScreenObject.class).equalTo("id", id).findFirst();
+
+    if (screenObject != null) {
+      deactivateScreenObjects();
+
+      realm.beginTransaction();
+      screenObject.setActive(true);
+      realm.commitTransaction();
+    }
+  }
+
   @Override public ScreenObject createScreenObject(String uriString, String message) {
 
     deactivateScreenObjects(); //clear any 'active' screenObjects. This new one will be the only active

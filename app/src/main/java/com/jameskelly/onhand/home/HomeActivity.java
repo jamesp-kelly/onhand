@@ -18,6 +18,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.jameskelly.onhand.R;
+import com.jameskelly.onhand.archive.ArchiveActivity;
 import com.jameskelly.onhand.di.HomeModule;
 import com.jameskelly.onhand.di.OnHandApplication;
 import com.jameskelly.onhand.service.OnHandServiceImpl;
@@ -92,7 +93,11 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   @OnClick(R.id.start_service_fab)
   public void startServiceClicked() {
-    toggleOnHandService();
+    //toggleOnHandService();
+
+
+    //todo: testing. revert asap
+    navigateToArchive();
   }
 
   @Override public void showPreviewImage(final String imageUriString, boolean skipCacheLookup) {
@@ -152,6 +157,10 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
       startService(intent);
       //todo: update sharedPrefs/ScreenObject
     }
+  }
+
+  @Override public void navigateToArchive() {
+    startActivity(ArchiveActivity.newIntent(this));
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

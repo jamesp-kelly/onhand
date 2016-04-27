@@ -42,4 +42,5 @@ public class HomePresenterImpl implements HomePresenter {
   @Override public void onViewDestroyed() {
     screenObjectRepository.closeConnection();
   }
+
 }

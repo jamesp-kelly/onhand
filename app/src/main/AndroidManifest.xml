@@ -30,6 +30,9 @@
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme.NoActionBar"
         />
+    <activity android:name=".archive.ArchiveActivity"
+        android:screenOrientation="portrait"
+        />
     <service android:name=".service.OnHandServiceImpl"/>
   </application>
 

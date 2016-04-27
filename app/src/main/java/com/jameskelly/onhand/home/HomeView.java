@@ -10,5 +10,7 @@ public interface HomeView extends BaseView {
   void startCamera();
   void startGallery();
 
+  void navigateToArchive();
+
   void toggleOnHandService();
 }
