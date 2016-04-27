@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.di.LockScreenModule;
@@ -27,7 +27,7 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
 
   private RequestCreator requestCreator;
 
-  @Bind(R.id.lockscreen_image) ImageView lockscreenImage;
+  @BindView(R.id.lockscreen_image) ImageView lockscreenImage;
 
   @Inject LockScreenPresenter presenter;
 

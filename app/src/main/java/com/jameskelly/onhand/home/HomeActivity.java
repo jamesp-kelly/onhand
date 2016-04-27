@@ -14,7 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.jameskelly.onhand.R;
@@ -46,8 +46,8 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   private final DateFormat imageNameFormat =
       new SimpleDateFormat("'OnHand_'yyyy-MM-dd-HH-mm-ss'.jpeg'", Locale.US);
 
-  @Bind(R.id.image_preview) ImageView imagePreview;
-  @Bind(R.id.start_service_fab) FloatingActionButton startServiceFab;
+  @BindView(R.id.image_preview) ImageView imagePreview;
+  @BindView(R.id.start_service_fab) FloatingActionButton startServiceFab;
 
   @Inject HomePresenter presenter;
 

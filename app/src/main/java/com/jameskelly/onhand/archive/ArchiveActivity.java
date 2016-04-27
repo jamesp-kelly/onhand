@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import com.jameskelly.onhand.R;
@@ -20,7 +20,7 @@ public class ArchiveActivity extends AppCompatActivity implements ArchiveView {
 
   private ArchiveRecyclerViewAdapter archiveRecyclerViewAdapter;
 
-  @Bind(R.id.archive_recycler_view) RealmRecyclerView archiveRecyclerView;
+  @BindView(R.id.archive_recycler_view) RealmRecyclerView archiveRecyclerView;
 
   @Inject ArchivePresenter presenter;
 

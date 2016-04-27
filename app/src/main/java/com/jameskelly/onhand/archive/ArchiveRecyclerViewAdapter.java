@@ -26,8 +26,8 @@ public class ArchiveRecyclerViewAdapter extends RealmBasedRecyclerViewAdapter<Sc
 
   public class ViewHolder extends RealmViewHolder {
 
-    //@Bind(R.id.archive_item_image) ImageView archiveImageView;
-    //@Bind(R.id.archive_item_message) TextView archiveTextView;
+    //@BindView(R.id.archive_item_image) ImageView archiveImageView;
+    //@BindView(R.id.archive_item_message) TextView archiveTextView;
 
     ImageView archiveImageView;
     TextView archiveTextView;
