@@ -68,7 +68,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   @Override protected void onResume() {
     super.onResume();
     if (!loadFromCamera) {
-      presenter.loadPreviewImage(1);
+      presenter.loadActiveScreenObject();
     }
   }
 

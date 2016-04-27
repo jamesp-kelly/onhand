@@ -5,4 +5,5 @@ public interface HomePresenter {
   void createScreenObject(String uriString);
   void onViewCreated();
   void onViewDestroyed();
+  void loadActiveScreenObject();
 }
