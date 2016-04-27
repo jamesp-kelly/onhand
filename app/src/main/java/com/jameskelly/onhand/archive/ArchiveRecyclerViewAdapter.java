@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.model.ScreenObject;
 import com.squareup.picasso.Picasso;
@@ -26,18 +28,12 @@ public class ArchiveRecyclerViewAdapter extends RealmBasedRecyclerViewAdapter<Sc
 
   public class ViewHolder extends RealmViewHolder {
 
-    //@BindView(R.id.archive_item_image) ImageView archiveImageView;
-    //@BindView(R.id.archive_item_message) TextView archiveTextView;
-
-    ImageView archiveImageView;
-    TextView archiveTextView;
+    @BindView(R.id.archive_item_image) ImageView archiveImageView;
+    @BindView(R.id.archive_item_message) TextView archiveTextView;
 
     public ViewHolder(View container) {
       super(container);
-      //ButterKnife.bind(context, container);
-
-      archiveImageView = (ImageView) container.findViewById(R.id.archive_item_image);
-      archiveTextView = (TextView) container.findViewById(R.id.archive_item_message);
+      ButterKnife.bind(this, container);
     }
   }
 
@@ -48,8 +44,8 @@ public class ArchiveRecyclerViewAdapter extends RealmBasedRecyclerViewAdapter<Sc
 
   @Override public void onBindRealmViewHolder(ViewHolder viewHolder, int i) {
     final ScreenObject screenObject = realmResults.get(i);
-    Picasso.with(context).load(screenObject.getImageUriString()).into(viewHolder.archiveImageView);
+    Picasso.with(context).load(screenObject.getImageUriString())
+        .resize(400, 400).centerInside().into(viewHolder.archiveImageView);
     viewHolder.archiveTextView.setText("This is just a test");
   }
-
 }
