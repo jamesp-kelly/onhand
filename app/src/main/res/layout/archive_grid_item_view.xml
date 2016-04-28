@@ -1,23 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="200dp"
+    android:background="#ffcc99"
+    android:layout_marginTop="10dp"
+    >
 
   <ImageView
       android:id="@+id/archive_item_image"
-      android:layout_width="100dp"
-      android:layout_height="100dp"
-      android:layout_marginTop="5dp"
-      android:layout_gravity="center_horizontal"/>
-
-  <TextView
-      android:id="@+id/archive_item_message"
-      android:layout_width="match_parent"
+      android:layout_alignParentRight="true"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="5dp"
-      android:layout_marginRight="5dp"
-      android:textStyle="bold"
+      android:background="@android:color/holo_blue_bright"
+      android:scaleType="centerCrop"
+      android:layout_marginLeft="20dp"
+      android:layout_marginRight="20dp"
       />
 
-</LinearLayout>
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      android:text="@string/archive_note_title"
+      android:id="@+id/archive_note_title"
+      android:textStyle="bold"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:layout_marginLeft="20dp"
+      />
+
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@android:color/white"
+      android:layout_below="@id/archive_note_title"
+      android:layout_toLeftOf="@id/archive_item_image"
+      android:layout_marginLeft="20dp"
+      android:layout_marginBottom="20dp"
+      >
+    <TextView
+        android:id="@+id/archive_note_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="@string/archive_no_note_message"
+        />
+
+  </FrameLayout>
+
+
+</RelativeLayout>

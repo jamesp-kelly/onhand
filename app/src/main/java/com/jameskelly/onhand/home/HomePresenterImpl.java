@@ -32,7 +32,9 @@ public class HomePresenterImpl implements HomePresenter {
     //end test
 
     ScreenObject activeScreenObject = screenObjectRepository.getActiveScreenObject();
-    homeView.showPreviewImage(activeScreenObject.getImageUriString(), false);
+    if (activeScreenObject != null) {
+      homeView.showPreviewImage(activeScreenObject.getImageUriString(), false);
+    }
   }
 
   @Override public void onViewCreated() {

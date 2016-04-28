@@ -69,4 +69,6 @@
   <string name="notification_content_text">OnHand service is running</string>
   <string name="notification_cancel">Cancel</string>
   <string name="finish_lockscreen_activity">finish_lockscreen_activity</string>
+  <string name="archive_no_note_message">No note added</string>
+  <string name="archive_note_title">Note:</string>
 </resources>

@@ -29,7 +29,7 @@ public class ArchiveRecyclerViewAdapter extends RealmBasedRecyclerViewAdapter<Sc
   public class ViewHolder extends RealmViewHolder {
 
     @BindView(R.id.archive_item_image) ImageView archiveImageView;
-    @BindView(R.id.archive_item_message) TextView archiveTextView;
+    @BindView(R.id.archive_note_text) TextView archiveTextView;
 
     public ViewHolder(View container) {
       super(container);
@@ -44,8 +44,10 @@ public class ArchiveRecyclerViewAdapter extends RealmBasedRecyclerViewAdapter<Sc
 
   @Override public void onBindRealmViewHolder(ViewHolder viewHolder, int i) {
     final ScreenObject screenObject = realmResults.get(i);
-    Picasso.with(context).load(screenObject.getImageUriString())
-        .resize(400, 400).centerInside().into(viewHolder.archiveImageView);
-    viewHolder.archiveTextView.setText("This is just a test");
+    Picasso.with(context).load(screenObject.getImageUriString()).resize(800, 800).centerInside().into(viewHolder.archiveImageView);
+
+    if (screenObject.getMessage() != null && !screenObject.getMessage().isEmpty()) {
+      viewHolder.archiveTextView.setText(screenObject.getMessage());
+    }
   }
 }
