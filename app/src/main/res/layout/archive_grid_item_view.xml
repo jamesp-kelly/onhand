@@ -1,5 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="250dp"
+    android:layout_width="match_parent"
+  >
+  
+  <android.support.v7.widget.CardView
+      android:id="@+id/archive_card_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:cardCornerRadius="4dp"
+      android:layout_marginLeft="10dp"
+      android:layout_marginRight="10dp"
+      android:layout_marginTop="5dp"
+      android:layout_marginBottom="5dp"
+      >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+      <ImageView
+          android:id="@+id/archive_item_image"
+          android:layout_alignParentRight="true"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:adjustViewBounds="true"
+          android:scaleType="fitEnd"
+          android:layout_marginLeft="20dp"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          android:text="@string/archive_note_title"
+          android:id="@+id/archive_note_title"
+          android:textStyle="bold"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
+          android:layout_marginLeft="20dp"
+          />
+
+        <TextView
+            android:id="@+id/archive_note_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/archive_note_title"
+            android:padding="5dp"
+            android:text="@string/archive_no_note_message"
+            android:layout_marginLeft="20dp"
+            />
+    </RelativeLayout>
+  </android.support.v7.widget.CardView>
+
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="200dp"
@@ -50,4 +117,4 @@
   </FrameLayout>
 
 
-</RelativeLayout>
+</RelativeLayout>-->
