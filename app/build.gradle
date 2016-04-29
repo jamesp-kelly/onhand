@@ -42,5 +42,6 @@ dependencies {
   compile 'io.reactivex:rxjava:1.0.14'
   compile 'com.squareup.picasso:picasso:2.5.2'
   compile 'com.github.thorbenprimke:realm-recyclerview:0.9.15'
+  compile 'joda-time:joda-time:2.9.3'
 
 }

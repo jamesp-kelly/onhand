@@ -9,6 +9,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.model.ScreenObject;
+import com.jameskelly.onhand.util.OnHandUtils;
 import com.squareup.picasso.Picasso;
 import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmResults;
@@ -29,7 +30,9 @@ public class ArchiveRecyclerViewAdapter extends RealmBasedRecyclerViewAdapter<Sc
   public class ViewHolder extends RealmViewHolder {
 
     @BindView(R.id.archive_item_image) ImageView archiveImageView;
-    @BindView(R.id.archive_note_text) TextView archiveTextView;
+    @BindView(R.id.archive_note_text) TextView archiveNoteTextView;
+    @BindView(R.id.archive_date_text) TextView archiveDateTextView;
+
 
     public ViewHolder(View container) {
       super(container);
@@ -46,8 +49,11 @@ public class ArchiveRecyclerViewAdapter extends RealmBasedRecyclerViewAdapter<Sc
     final ScreenObject screenObject = realmResults.get(i);
     Picasso.with(context).load(screenObject.getImageUriString()).resize(800, 800).centerInside().into(viewHolder.archiveImageView);
 
+    String dateString = OnHandUtils.formattedDate(screenObject.getCreatedTimeStamp());
+    viewHolder.archiveDateTextView.setText(dateString);
+
     if (screenObject.getMessage() != null && !screenObject.getMessage().isEmpty()) {
-      viewHolder.archiveTextView.setText(screenObject.getMessage());
+      viewHolder.archiveNoteTextView.setText(screenObject.getMessage());
     }
   }
 }

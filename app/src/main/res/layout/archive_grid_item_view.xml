@@ -48,6 +48,15 @@
             android:text="@string/archive_no_note_message"
             android:layout_marginLeft="20dp"
             />
+
+        <TextView
+            android:id="@+id/archive_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginLeft="20dp"
+            />
+
       </LinearLayout>
 
       <FrameLayout
