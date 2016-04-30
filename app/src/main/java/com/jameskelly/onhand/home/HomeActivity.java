@@ -11,7 +11,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.BindView;
@@ -47,7 +46,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
       new SimpleDateFormat("'OnHand_'yyyy-MM-dd-HH-mm-ss'.jpeg'", Locale.US);
 
   @BindView(R.id.image_preview) ImageView imagePreview;
-  @BindView(R.id.start_service_fab) FloatingActionButton startServiceFab;
+  @BindView(R.id.add_content) FloatingActionButton startServiceFab;
 
   @Inject HomePresenter presenter;
 
@@ -91,13 +90,9 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     startGallery();
   }
 
-  @OnClick(R.id.start_service_fab)
+  @OnClick(R.id.add_content)
   public void startServiceClicked() {
-    //toggleOnHandService();
 
-
-    //todo: testing. revert asap
-    navigateToArchive();
   }
 
   @Override public void showPreviewImage(final String imageUriString, boolean skipCacheLookup) {
@@ -112,8 +107,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
           .networkPolicy(NetworkPolicy.NO_CACHE);
     }
     requestCreator.into(imagePreviewTarget);
-
-    startServiceFab.setVisibility(View.VISIBLE);
   }
 
   private Target imagePreviewTarget = new Target() {

@@ -34,6 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/camera_button"
+        android:enabled="false"
         />
 
     <Button
@@ -41,26 +42,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/gallery_button"
+        android:enabled="false"
         />
   
     <ImageView
         android:id="@+id/image_preview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:src="@drawable/sample_photo"
         />
     </LinearLayout>
 
   <android.support.design.widget.FloatingActionButton
-      android:id="@+id/start_service_fab"
+      android:id="@+id/add_content"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
       android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_margin="20dp"
-      android:src="@android:drawable/ic_media_play"
-      android:visibility="gone"
+      android:src="@drawable/ic_add_white_24dp"
+      app:elevation="4dp"
       />
   
 </RelativeLayout>
