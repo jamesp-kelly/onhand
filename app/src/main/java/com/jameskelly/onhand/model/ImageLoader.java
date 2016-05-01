@@ -8,7 +8,7 @@ public interface ImageLoader {
   void loadImageForImageView(String url, ImageView imageView, int minDimen, boolean debugFlags, boolean skipCacheLookup);
 
   interface ImageLoadListener {
-    void onImageLoaded(Bitmap bitmap);
+    void onImageLoaded(Bitmap bitmap, String updatedUri);
     void onImageLoadError();
   }
 }

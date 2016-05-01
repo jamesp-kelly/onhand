@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -22,12 +21,9 @@ import com.jameskelly.onhand.di.HomeModule;
 import com.jameskelly.onhand.di.OnHandApplication;
 import com.jameskelly.onhand.model.ImageLoader;
 import com.jameskelly.onhand.service.OnHandServiceImpl;
+import com.jameskelly.onhand.util.OnHandUtils;
 import com.squareup.picasso.RequestCreator;
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import javax.inject.Inject;
 
 public class HomeActivity extends AppCompatActivity implements HomeView {
@@ -38,9 +34,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   private Uri imageUri;
   private RequestCreator requestCreator;
   private boolean loadFromCamera = false;
-  private File picturesOutputFolder;
-  private final DateFormat imageNameFormat =
-      new SimpleDateFormat("'OnHand_'yyyy-MM-dd-HH-mm-ss'.jpeg'", Locale.US);
 
   @BindView(R.id.image_preview) ImageView imagePreview;
   @BindView(R.id.add_content) FloatingActionButton startServiceFab;
@@ -54,8 +47,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     bindDI();
 
     presenter.onViewCreated();
-    picturesOutputFolder = new File(
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "OnHand");
   }
 
   @Override protected void onPause() {
@@ -90,7 +81,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   @OnClick(R.id.add_content)
   public void startServiceClicked(View v) {
-    //navigateToArchive();
+    navigateToArchive();
   }
 
   @Override public void updatePreviewImage(Bitmap bitmap) {
@@ -103,8 +94,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   @Override public void startCamera() {
     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    String fileName = imageNameFormat.format(new Date());
-    File photo = new File(picturesOutputFolder, fileName);
+    File photo = OnHandUtils.createNewImageFile();
     imageUri = Uri.fromFile(photo);
 
     intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);

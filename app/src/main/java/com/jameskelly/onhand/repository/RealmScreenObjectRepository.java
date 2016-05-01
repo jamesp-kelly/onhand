@@ -44,7 +44,7 @@ public class RealmScreenObjectRepository implements ScreenObjectRepository {
     return realm.where(ScreenObject.class).equalTo("isActive", false).findAll();
   }
 
-  @Override public void activateScreenObject(int id) {
+  @Override public void activateScreenObject(long id) {
     ScreenObject screenObject = realm.where(ScreenObject.class).equalTo("id", id).findFirst();
 
     if (screenObject != null) {
@@ -52,6 +52,16 @@ public class RealmScreenObjectRepository implements ScreenObjectRepository {
 
       realm.beginTransaction();
       screenObject.setActive(true);
+      realm.commitTransaction();
+    }
+  }
+
+  @Override public void updateImageUri(long id, String updatedUri) {
+    ScreenObject screenObject = realm.where(ScreenObject.class).equalTo("id", id).findFirst();
+
+    if (screenObject != null) {
+      realm.beginTransaction();
+      screenObject.setImageUriString(updatedUri);
       realm.commitTransaction();
     }
   }

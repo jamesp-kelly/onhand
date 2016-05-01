@@ -9,7 +9,8 @@ public interface ScreenObjectRepository {
   ScreenObject getActiveScreenObject();
   List<ScreenObject> getAllPreviousScreenObjects();
 
-  void activateScreenObject(int id);
+  void activateScreenObject(long id);
+  void updateImageUri(long id, String updatedUri);
 
   void detailScreenObjects();
 

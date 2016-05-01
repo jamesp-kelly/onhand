@@ -1,5 +1,11 @@
 package com.jameskelly.onhand.util;
 
+import android.os.Environment;
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -30,4 +36,13 @@ public class OnHandUtils {
     return dateText + " " + timeText;
   }
 
+  public static File createNewImageFile() {
+    final DateFormat imageNameFormat =
+        new SimpleDateFormat("'OnHand_'yyyy-MM-dd-HH-mm-ss'.jpeg'", Locale.US);
+    File picturesOutputFolder = new File(
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "OnHand");
+
+    String fileName = imageNameFormat.format(new Date());
+    return new File(picturesOutputFolder, fileName);
+  }
 }

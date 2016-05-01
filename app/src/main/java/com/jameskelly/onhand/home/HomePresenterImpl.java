@@ -12,6 +12,7 @@ public class HomePresenterImpl implements HomePresenter, ImageLoader.ImageLoadLi
   private HomeView homeView;
   private ScreenObjectRepository screenObjectRepository;
   private ImageLoader imageLoader;
+  private ScreenObject currentScreenObject;
 
   public HomePresenterImpl(HomeView homeView, ScreenObjectRepository screenObjectRepository, ImageLoader imageLoader) {
     this.homeView = homeView;
@@ -20,22 +21,22 @@ public class HomePresenterImpl implements HomePresenter, ImageLoader.ImageLoadLi
   }
 
   @Override public void createScreenObject(String uriString) {
-    ScreenObject screenObject = screenObjectRepository.createScreenObject(uriString, null);
-    imageLoader.loadImage(screenObject.getImageUriString(), IMAGE_PREVIEW_DIMEN, this, true, true);
+    currentScreenObject = screenObjectRepository.createScreenObject(uriString, null);
+    imageLoader.loadImage(currentScreenObject.getImageUriString(), IMAGE_PREVIEW_DIMEN, this, true, true);
   }
 
   @Override public void loadActiveScreenObject() {
+    currentScreenObject = screenObjectRepository.getActiveScreenObject();
 
-    ScreenObject activeScreenObject = screenObjectRepository.getActiveScreenObject();
-    if (activeScreenObject != null) {
-      imageLoader.loadImage(activeScreenObject.getImageUriString(), IMAGE_PREVIEW_DIMEN, this, true, false);
+    if (currentScreenObject != null) {
+      imageLoader.loadImage(currentScreenObject.getImageUriString(), IMAGE_PREVIEW_DIMEN, this, true, false);
     }
   }
 
   @Override public void loadScreenObject(int screenObjectId) {
-    ScreenObject screenObject = screenObjectRepository.getScreenObject(screenObjectId);
-    if (screenObject != null) {
-      imageLoader.loadImage(screenObject.getImageUriString(), IMAGE_PREVIEW_DIMEN, this, true, false);
+    currentScreenObject = screenObjectRepository.getScreenObject(screenObjectId);
+    if (currentScreenObject != null) {
+      imageLoader.loadImage(currentScreenObject.getImageUriString(), IMAGE_PREVIEW_DIMEN, this, true, false);
     }
   }
 
@@ -47,8 +48,11 @@ public class HomePresenterImpl implements HomePresenter, ImageLoader.ImageLoadLi
     screenObjectRepository.closeConnection();
   }
 
-  @Override public void onImageLoaded(Bitmap bitmap) {
+  @Override public void onImageLoaded(Bitmap bitmap, String updatedUri) {
     homeView.updatePreviewImage(bitmap);
+    if (updatedUri != null) {
+      screenObjectRepository.updateImageUri(currentScreenObject.getId(), updatedUri);
+    }
   }
 
   @Override public void onImageLoadError() {
