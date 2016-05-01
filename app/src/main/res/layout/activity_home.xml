@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/camera_button"
-        android:enabled="false"
+        android:enabled="true"
         />
 
     <Button
@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/gallery_button"
-        android:enabled="false"
+        android:enabled="true"
         />
   
     <ImageView

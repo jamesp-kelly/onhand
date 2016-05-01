@@ -3,7 +3,6 @@ package com.jameskelly.onhand.home;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,12 +19,9 @@ import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.archive.ArchiveActivity;
 import com.jameskelly.onhand.di.HomeModule;
 import com.jameskelly.onhand.di.OnHandApplication;
+import com.jameskelly.onhand.model.ImageLoader;
 import com.jameskelly.onhand.service.OnHandServiceImpl;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
-import com.squareup.picasso.Target;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -48,6 +44,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   @BindView(R.id.image_preview) ImageView imagePreview;
   @BindView(R.id.add_content) FloatingActionButton startServiceFab;
 
+  @Inject ImageLoader imageLoader;
   @Inject HomePresenter presenter;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,33 +89,12 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
 
   @OnClick(R.id.add_content)
   public void startServiceClicked() {
-
+    navigateToArchive();
   }
 
-  @Override public void showPreviewImage(final String imageUriString, boolean skipCacheLookup) {
-    Uri imageUri = Uri.parse(imageUriString);
-    Picasso picasso = Picasso.with(this);
-    picasso.setIndicatorsEnabled(true);
-    requestCreator = picasso.load(imageUri)
-        .resize(1920, 1920).centerInside(); //centerInside means the ratio will be kept with largest dimension 1920
-
-    if (skipCacheLookup) {
-      requestCreator.memoryPolicy(MemoryPolicy.NO_CACHE)
-          .networkPolicy(NetworkPolicy.NO_CACHE);
-    }
-    requestCreator.into(imagePreviewTarget);
+  @Override public void updatePreviewImage(Bitmap bitmap) {
+    imagePreview.setImageBitmap(bitmap);
   }
-
-  private Target imagePreviewTarget = new Target() {
-    @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-      requestCreator.into(imagePreview);
-    }
-
-    @Override public void onBitmapFailed(Drawable errorDrawable) {
-      showPreviewError();
-    }
-    @Override public void onPrepareLoad(Drawable placeHolderDrawable) {}
-  };
 
   @Override public void showPreviewError() {
     Toast.makeText(this, "Error loading image", Toast.LENGTH_SHORT).show();

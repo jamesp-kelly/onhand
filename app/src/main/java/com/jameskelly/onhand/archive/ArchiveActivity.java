@@ -11,6 +11,7 @@ import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.di.ArchiveModule;
 import com.jameskelly.onhand.di.OnHandApplication;
+import com.jameskelly.onhand.model.ImageLoader;
 import com.jameskelly.onhand.model.ScreenObject;
 import io.realm.RealmResults;
 import java.util.List;
@@ -22,6 +23,7 @@ public class ArchiveActivity extends AppCompatActivity implements ArchiveView {
 
   @BindView(R.id.archive_recycler_view) RealmRecyclerView archiveRecyclerView;
 
+  @Inject ImageLoader imageLoader;
   @Inject ArchivePresenter presenter;
 
   public static Intent newIntent(Context context) {
@@ -39,7 +41,7 @@ public class ArchiveActivity extends AppCompatActivity implements ArchiveView {
   @Override public void displayScreenObjects(List<ScreenObject> screenObjects) {
 
     archiveRecyclerViewAdapter = new ArchiveRecyclerViewAdapter(
-        this, (RealmResults<ScreenObject>) screenObjects, true, false);
+        this, imageLoader, (RealmResults<ScreenObject>) screenObjects, true, false);
     archiveRecyclerView.setAdapter(archiveRecyclerViewAdapter);
   }
 

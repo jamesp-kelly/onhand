@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.di.LockScreenModule;
 import com.jameskelly.onhand.di.OnHandApplication;
+import com.jameskelly.onhand.model.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
@@ -29,6 +30,7 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
 
   @BindView(R.id.lockscreen_image) ImageView lockscreenImage;
 
+  @Inject ImageLoader imageLoader;
   @Inject LockScreenPresenter presenter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +47,12 @@ public class LockScreenActivity extends AppCompatActivity implements LockScreenV
     Uri loadedImage = presenter.loadUriFromPreferences(
         getString(R.string.shared_prefs_saved_image));
 
+    //todo update to use imageloader and redo a lot here
     Picasso picasso = Picasso.with(this);
     picasso.setIndicatorsEnabled(true);
     requestCreator = picasso.load(loadedImage).resize(1920, 1920).centerInside();
     requestCreator.into(lockScreenTarget);
+
 
 
     //temp

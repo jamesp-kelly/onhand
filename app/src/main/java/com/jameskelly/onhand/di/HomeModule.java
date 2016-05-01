@@ -1,12 +1,12 @@
 package com.jameskelly.onhand.di;
 
 import android.app.Application;
-import android.content.SharedPreferences;
 import com.jameskelly.onhand.home.HomePresenter;
 import com.jameskelly.onhand.home.HomePresenterImpl;
 import com.jameskelly.onhand.home.HomeView;
-import com.jameskelly.onhand.repository.ScreenObjectRepository;
+import com.jameskelly.onhand.model.ImageLoader;
 import com.jameskelly.onhand.repository.RealmScreenObjectRepository;
+import com.jameskelly.onhand.repository.ScreenObjectRepository;
 import dagger.Module;
 import dagger.Provides;
 
@@ -33,7 +33,7 @@ public class HomeModule {
 
   @Provides
   @ActivityScope
-  HomePresenter provideHomePresenter(ScreenObjectRepository repository) {
-    return new HomePresenterImpl(view, repository); //todo: fix the way presenter gets view
+  HomePresenter provideHomePresenter(ScreenObjectRepository repository, ImageLoader imageLoader) {
+    return new HomePresenterImpl(view, repository, imageLoader); //todo: fix the way presenter gets view
   }
 }

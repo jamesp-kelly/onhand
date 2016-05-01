@@ -8,9 +8,9 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.jameskelly.onhand.R;
+import com.jameskelly.onhand.model.ImageLoader;
 import com.jameskelly.onhand.model.ScreenObject;
 import com.jameskelly.onhand.util.OnHandUtils;
-import com.squareup.picasso.Picasso;
 import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmResults;
 import io.realm.RealmViewHolder;
@@ -19,12 +19,14 @@ public class ArchiveRecyclerViewAdapter extends RealmBasedRecyclerViewAdapter<Sc
     ArchiveRecyclerViewAdapter.ViewHolder> {
 
   private final Context context;
+  private final ImageLoader imageLoader;
 
-  public ArchiveRecyclerViewAdapter(Context context, RealmResults<ScreenObject> realmResults,
-      boolean autoUpdate, boolean animateResults) {
+  public ArchiveRecyclerViewAdapter(Context context, ImageLoader imageLoader,
+      RealmResults<ScreenObject> realmResults, boolean autoUpdate, boolean animateResults) {
 
     super(context, realmResults, autoUpdate, animateResults);
     this.context = context;
+    this.imageLoader = imageLoader;
   }
 
   public class ViewHolder extends RealmViewHolder {
@@ -47,7 +49,7 @@ public class ArchiveRecyclerViewAdapter extends RealmBasedRecyclerViewAdapter<Sc
 
   @Override public void onBindRealmViewHolder(ViewHolder viewHolder, int i) {
     final ScreenObject screenObject = realmResults.get(i);
-    Picasso.with(context).load(screenObject.getImageUriString()).resize(800, 800).centerInside().into(viewHolder.archiveImageView);
+    imageLoader.loadImageForImageView(screenObject.getImageUriString(), viewHolder.archiveImageView, 800, true, false);
 
     String dateString = OnHandUtils.formattedDate(screenObject.getCreatedTimeStamp());
     viewHolder.archiveDateTextView.setText(dateString);

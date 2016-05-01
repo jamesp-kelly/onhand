@@ -4,6 +4,10 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import com.jameskelly.onhand.model.ImageLoader;
+import com.jameskelly.onhand.model.PicassoImageLoader;
+import com.squareup.picasso.Picasso;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
@@ -32,5 +36,18 @@ public class AppModule {
   @Singleton
   protected SharedPreferences provideSharedPreferences() {
     return PreferenceManager.getDefaultSharedPreferences(application);
+  }
+
+  @Provides
+  @Singleton
+  public Picasso providePicasso(Application onHandApp) {
+    return new Picasso.Builder(onHandApp)
+        .build();
+  }
+
+  @Provides
+  @Singleton
+  public ImageLoader provideImageLoader(@NonNull Picasso picasso) {
+    return new PicassoImageLoader(picasso);
   }
 }

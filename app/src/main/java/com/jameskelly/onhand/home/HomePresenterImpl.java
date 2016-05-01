@@ -1,39 +1,41 @@
 package com.jameskelly.onhand.home;
 
+import android.graphics.Bitmap;
+import com.jameskelly.onhand.model.ImageLoader;
 import com.jameskelly.onhand.model.ScreenObject;
 import com.jameskelly.onhand.repository.ScreenObjectRepository;
 
-public class HomePresenterImpl implements HomePresenter {
+public class HomePresenterImpl implements HomePresenter, ImageLoader.ImageLoadListener {
+
+  private static final int IMAGE_PREVIEW_DIMEN = 1920;
 
   private HomeView homeView;
   private ScreenObjectRepository screenObjectRepository;
+  private ImageLoader imageLoader;
 
-  public HomePresenterImpl(HomeView homeView, ScreenObjectRepository screenObjectRepository) {
+  public HomePresenterImpl(HomeView homeView, ScreenObjectRepository screenObjectRepository, ImageLoader imageLoader) {
     this.homeView = homeView;
     this.screenObjectRepository = screenObjectRepository;
-  }
-
-  @Override public void loadPreviewImage(int screenObjectId) {
-    ScreenObject screenObject = screenObjectRepository.getScreenObject(screenObjectId);
-    if (screenObject != null) {
-      homeView.showPreviewImage(screenObject.getImageUriString(), false);
-    }
+    this.imageLoader = imageLoader;
   }
 
   @Override public void createScreenObject(String uriString) {
     ScreenObject screenObject = screenObjectRepository.createScreenObject(uriString, null);
-    homeView.showPreviewImage(screenObject.getImageUriString(), true);
+    imageLoader.loadImage(screenObject.getImageUriString(), IMAGE_PREVIEW_DIMEN, this, true, true);
   }
 
   @Override public void loadActiveScreenObject() {
 
-    //testing
-    screenObjectRepository.detailScreenObjects();
-    //end test
-
     ScreenObject activeScreenObject = screenObjectRepository.getActiveScreenObject();
     if (activeScreenObject != null) {
-      homeView.showPreviewImage(activeScreenObject.getImageUriString(), false);
+      imageLoader.loadImage(activeScreenObject.getImageUriString(), IMAGE_PREVIEW_DIMEN, this, true, false);
+    }
+  }
+
+  @Override public void loadScreenObject(int screenObjectId) {
+    ScreenObject screenObject = screenObjectRepository.getScreenObject(screenObjectId);
+    if (screenObject != null) {
+      imageLoader.loadImage(screenObject.getImageUriString(), IMAGE_PREVIEW_DIMEN, this, true, false);
     }
   }
 
@@ -45,4 +47,11 @@ public class HomePresenterImpl implements HomePresenter {
     screenObjectRepository.closeConnection();
   }
 
+  @Override public void onImageLoaded(Bitmap bitmap) {
+    homeView.updatePreviewImage(bitmap);
+  }
+
+  @Override public void onImageLoadError() {
+    homeView.showPreviewError();
+  }
 }
