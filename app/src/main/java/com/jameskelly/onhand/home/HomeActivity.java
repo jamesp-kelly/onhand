@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.BindView;
@@ -88,8 +89,8 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   }
 
   @OnClick(R.id.add_content)
-  public void startServiceClicked() {
-    navigateToArchive();
+  public void startServiceClicked(View v) {
+    //navigateToArchive();
   }
 
   @Override public void updatePreviewImage(Bitmap bitmap) {
