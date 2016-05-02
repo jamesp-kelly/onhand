@@ -22,7 +22,7 @@ public class CustomMoveBehaviour extends CoordinatorLayout.Behavior<LinearLayout
   @Override
   public boolean onDependentViewChanged(CoordinatorLayout parent, LinearLayout child,
       View dependency) {
-    float translationY = getFabTranslationYForSnackbar(parent, dependency); //this isn't working
+    float translationY = getFabTranslationYForSnackbar(parent, child);
     child.setTranslationY(translationY);
 
     return false;
@@ -34,9 +34,9 @@ public class CustomMoveBehaviour extends CoordinatorLayout.Behavior<LinearLayout
     final List<View> dependencies = parent.getDependencies(view);
     for (int i = 0, z = dependencies.size(); i < z; i++) {
       final View snackBar = dependencies.get(i);
-      if (view instanceof Snackbar.SnackbarLayout && parent.doViewsOverlap(view, snackBar)) {
+      if (snackBar instanceof Snackbar.SnackbarLayout && parent.doViewsOverlap(view, snackBar)) {
         minOffset = Math.min(minOffset,
-            ViewCompat.getTranslationY(view) - view.getHeight());
+            ViewCompat.getTranslationY(snackBar) - snackBar.getHeight());
       }
     }
 

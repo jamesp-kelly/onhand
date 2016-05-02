@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -80,7 +79,7 @@ public class HomeActivity extends BaseActivity implements HomeView {
   @OnClick(R.id.add_content)
   public void addClicked(View v) {
 
-    Snackbar.make(v, "testing snackbar", Snackbar.LENGTH_SHORT).show();
+    //Snackbar.make(v, "testing snackbar", Snackbar.LENGTH_SHORT).show();
 
     if (cameraFab.getVisibility() == View.VISIBLE) {
       cameraFab.hide();
