@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import com.jameskelly.onhand.R;
+import com.jameskelly.onhand.base.BaseActivity;
 import com.jameskelly.onhand.di.ArchiveModule;
 import com.jameskelly.onhand.di.OnHandApplication;
 import com.jameskelly.onhand.model.ImageLoader;
@@ -17,7 +17,7 @@ import io.realm.RealmResults;
 import java.util.List;
 import javax.inject.Inject;
 
-public class ArchiveActivity extends AppCompatActivity implements ArchiveView {
+public class ArchiveActivity extends BaseActivity implements ArchiveView {
 
   private ArchiveRecyclerViewAdapter archiveRecyclerViewAdapter;
 

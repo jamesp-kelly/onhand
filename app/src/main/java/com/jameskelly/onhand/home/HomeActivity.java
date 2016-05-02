@@ -9,7 +9,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.jameskelly.onhand.R;
 import com.jameskelly.onhand.archive.ArchiveActivity;
+import com.jameskelly.onhand.base.BaseActivity;
 import com.jameskelly.onhand.di.HomeModule;
 import com.jameskelly.onhand.di.OnHandApplication;
 import com.jameskelly.onhand.model.ImageLoader;
@@ -28,7 +29,7 @@ import com.squareup.picasso.RequestCreator;
 import java.io.File;
 import javax.inject.Inject;
 
-public class HomeActivity extends AppCompatActivity implements HomeView {
+public class HomeActivity extends BaseActivity implements HomeView {
 
   private static final int TAKE_PICTURE_REQUEST_CODE = 1;
   private static final int LOAD_GALLERY_REQUEST_CODE = 2;
@@ -36,6 +37,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   private Uri imageUri;
   private RequestCreator requestCreator;
   private boolean loadFromCamera = false;
+  private Toolbar toolbar;
 
   @BindView(R.id.image_preview) ImageView imagePreview;
   @BindView(R.id.add_content) FloatingActionButton bigAddFab;
@@ -49,10 +51,12 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home);
-    bindDI();
 
+    bindDI();
     presenter.onViewCreated();
   }
+
+
 
   @Override protected void onPause() {
     super.onPause();

@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,6 +15,7 @@ import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.jameskelly.onhand.R;
+import com.jameskelly.onhand.base.BaseActivity;
 import com.jameskelly.onhand.di.LockScreenModule;
 import com.jameskelly.onhand.di.OnHandApplication;
 import com.jameskelly.onhand.model.ImageLoader;
@@ -24,7 +24,7 @@ import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 import javax.inject.Inject;
 
-public class LockScreenActivity extends AppCompatActivity implements LockScreenView {
+public class LockScreenActivity extends BaseActivity implements LockScreenView {
 
   private RequestCreator requestCreator;
 
