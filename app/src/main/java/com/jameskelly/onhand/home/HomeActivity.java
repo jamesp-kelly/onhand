@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.BindView;
@@ -36,7 +38,10 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   private boolean loadFromCamera = false;
 
   @BindView(R.id.image_preview) ImageView imagePreview;
-  @BindView(R.id.add_content) FloatingActionButton startServiceFab;
+  @BindView(R.id.add_content) FloatingActionButton bigAddFab;
+  @BindView(R.id.add_camera) FloatingActionButton cameraFab;
+  @BindView(R.id.add_gallery) FloatingActionButton galleryFab;
+  @BindView(R.id.add_link) FloatingActionButton linkFab;
 
   @Inject ImageLoader imageLoader;
   @Inject HomePresenter presenter;
@@ -80,8 +85,36 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
   }
 
   @OnClick(R.id.add_content)
-  public void startServiceClicked(View v) {
-    navigateToArchive();
+  public void addClicked(View v) {
+    if (cameraFab.getVisibility() == View.VISIBLE) {
+      cameraFab.hide();
+      galleryFab.hide();
+      linkFab.hide();
+      ViewCompat.animate(bigAddFab).rotation(0f).withLayer().setDuration(300)
+          .setInterpolator(new OvershootInterpolator(3f)).start();
+    } else {
+      cameraFab.show();
+      galleryFab.show();
+      linkFab.show();
+      ViewCompat.animate(bigAddFab).rotation(135f).withLayer().setDuration(300)
+          .setInterpolator(new OvershootInterpolator(3f)).start();
+
+    }
+  }
+
+  @OnClick(R.id.add_camera)
+  public void addCameraClicked(View v) {
+    startCamera();
+  }
+
+  @OnClick(R.id.add_gallery)
+  public void addGalleryClicked(View v) {
+    startGallery();
+  }
+
+  @OnClick(R.id.add_link)
+  public void addLinkClicked(View v) {
+    Toast.makeText(this, "Do something here", Toast.LENGTH_SHORT).show();
   }
 
   @Override public void updatePreviewImage(Bitmap bitmap) {
