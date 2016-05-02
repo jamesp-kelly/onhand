@@ -98,7 +98,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
       linkFab.show();
       ViewCompat.animate(bigAddFab).rotation(135f).withLayer().setDuration(300)
           .setInterpolator(new OvershootInterpolator(3f)).start();
-
     }
   }
 

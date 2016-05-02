@@ -5,12 +5,15 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.jameskelly.onhand.model.ImageLoader;
 import com.jameskelly.onhand.model.PicassoImageLoader;
 import com.squareup.picasso.Picasso;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
+import okhttp3.OkHttpClient;
 
 @Module
 public class AppModule {
@@ -40,8 +43,17 @@ public class AppModule {
 
   @Provides
   @Singleton
-  public Picasso providePicasso(Application onHandApp) {
+  protected OkHttpClient provideOkHttpClient() {
+    return new OkHttpClient.Builder()
+        .addNetworkInterceptor(new StethoInterceptor())
+        .build();
+  }
+
+  @Provides
+  @Singleton
+  public Picasso providePicasso(Application onHandApp, OkHttpClient okHttpClient) {
     return new Picasso.Builder(onHandApp)
+        .downloader(new OkHttp3Downloader(okHttpClient))
         .build();
   }
 
