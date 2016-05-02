@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -56,8 +57,6 @@ public class HomeActivity extends BaseActivity implements HomeView {
     presenter.onViewCreated();
   }
 
-
-
   @Override protected void onPause() {
     super.onPause();
     loadFromCamera = false;
@@ -78,18 +77,11 @@ public class HomeActivity extends BaseActivity implements HomeView {
         .inject(this);
   }
 
-  @OnClick(R.id.camera_button)
-  public void cameraClicked() {
-    startCamera();
-  }
-
-  @OnClick(R.id.gallery_button)
-  public void galleryClicked() {
-    startGallery();
-  }
-
   @OnClick(R.id.add_content)
   public void addClicked(View v) {
+
+    Snackbar.make(v, "testing snackbar", Snackbar.LENGTH_SHORT).show();
+
     if (cameraFab.getVisibility() == View.VISIBLE) {
       cameraFab.hide();
       galleryFab.hide();

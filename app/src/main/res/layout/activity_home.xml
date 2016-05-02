@@ -17,87 +17,88 @@
 
     <include layout="@layout/toolbar" />
 
-    <Button
-        android:id="@+id/camera_button"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/camera_button"
-        android:enabled="true"
-        />
+        android:layout_height="match_parent"
+        android:layout_weight="1.2"
+        android:orientation="horizontal"
+        >
 
-    <Button
-        android:id="@+id/gallery_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/gallery_button"
-        android:enabled="true"
-        />
+      <ImageView
+          android:id="@+id/image_preview"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:adjustViewBounds="true"
+          android:layout_marginTop="10dp"
+          android:layout_marginBottom="10dp"
+          android:layout_marginRight="5dp"
+          android:layout_marginEnd="5dp"
+          android:src="@drawable/placeholder_portrait_picture"
+          />
 
-    <ImageView
-        android:id="@+id/image_preview"
+      <TextView
+          android:id="@+id/selected_note_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="10dp"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="10dp"
+          android:text="@string/archive_note_title"
+          android:textStyle="bold"
+          />
+
+      <TextView
+          android:id="@+id/selected_note"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_toRightOf="@id/selected_note_title"
+          android:layout_toLeftOf="@id/image_preview"
+          android:layout_marginLeft="10dp"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="10dp"
+          android:text="This is a sample note that could be added i suppose"
+          />
+
+      <TextView
+          android:id="@+id/selected_from_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/selected_note"
+          android:layout_marginLeft="10dp"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="10dp"
+          android:text="@string/selected_from_title"
+          android:textStyle="bold"
+          />
+
+      <TextView
+          android:id="@+id/selected_from"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/selected_note"
+          android:layout_toRightOf="@id/selected_from_title"
+          android:layout_toLeftOf="@id/image_preview"
+          android:layout_marginLeft="10dp"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="10dp"
+          android:text="Camera"
+          />
+
+    </RelativeLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/cardview_shadow_start_color"
+        >
+
+    </FrameLayout>
+
   </LinearLayout>
 
-  <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:layout_gravity="bottom|end"
-      android:layout_margin="16dp"
-      >
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_link"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_public_white_24dp"
-        app:elevation="4dp"
-        app:fabSize="mini"
-        app:backgroundTint="@color/colorPrimary"
-        android:visibility="invisible"
-        />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_gallery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_collections_white_24dp"
-        app:elevation="4dp"
-        app:fabSize="mini"
-        app:backgroundTint="@color/colorPrimary"
-        android:visibility="invisible"
-        />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_add_a_photo_white_24dp"
-        app:elevation="4dp"
-        app:fabSize="mini"
-        app:backgroundTint="@color/colorPrimary"
-        android:visibility="invisible"
-        />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_add_white_24dp"
-        app:elevation="4dp"
-        app:fabSize="normal"
-        />
-
-  </LinearLayout>
-
-
+  <include layout="@layout/add_fabs"/>
 
 </android.support.design.widget.CoordinatorLayout>
