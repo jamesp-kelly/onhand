@@ -10,6 +10,9 @@ import android.widget.LinearLayout;
 import java.util.List;
 
 public class CustomMoveBehaviour extends CoordinatorLayout.Behavior<LinearLayout> {
+
+  private final static String TAG = CustomMoveBehaviour.class.getSimpleName();
+
   public CustomMoveBehaviour(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
@@ -22,8 +25,10 @@ public class CustomMoveBehaviour extends CoordinatorLayout.Behavior<LinearLayout
   @Override
   public boolean onDependentViewChanged(CoordinatorLayout parent, LinearLayout child,
       View dependency) {
-    float translationY = getFabTranslationYForSnackbar(parent, child);
-    child.setTranslationY(translationY);
+    if (dependency instanceof Snackbar.SnackbarLayout) {
+      float translationY = getFabTranslationYForSnackbar(parent, child);
+      child.setTranslationY(translationY);
+    }
 
     return false;
   }

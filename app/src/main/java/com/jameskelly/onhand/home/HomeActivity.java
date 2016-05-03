@@ -9,6 +9,9 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
@@ -27,6 +30,8 @@ import com.jameskelly.onhand.service.OnHandServiceImpl;
 import com.jameskelly.onhand.util.OnHandUtils;
 import com.squareup.picasso.RequestCreator;
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import javax.inject.Inject;
 
 public class HomeActivity extends BaseActivity implements HomeView {
@@ -38,12 +43,14 @@ public class HomeActivity extends BaseActivity implements HomeView {
   private RequestCreator requestCreator;
   private boolean loadFromCamera = false;
   private Toolbar toolbar;
+  private ArchiveListAdapter archiveListAdapter;
 
   @BindView(R.id.image_preview) ImageView imagePreview;
   @BindView(R.id.add_content) FloatingActionButton bigAddFab;
   @BindView(R.id.add_camera) FloatingActionButton cameraFab;
   @BindView(R.id.add_gallery) FloatingActionButton galleryFab;
   @BindView(R.id.add_link) FloatingActionButton linkFab;
+  @BindView(R.id.archive_recycleview) RecyclerView archiveRecyclerView;
 
   @Inject ImageLoader imageLoader;
   @Inject HomePresenter presenter;
@@ -54,6 +61,13 @@ public class HomeActivity extends BaseActivity implements HomeView {
 
     bindDI();
     presenter.onViewCreated();
+
+    //temp stuff
+    List<String> tempStrings = Arrays.asList("one", "two", "three", "four", "one", "two", "three", "four", "one", "two", "three", "four");
+    archiveRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    archiveListAdapter = new ArchiveListAdapter(tempStrings);
+    archiveRecyclerView.setAdapter(archiveListAdapter);
+    archiveRecyclerView.setItemAnimator(new DefaultItemAnimator());
   }
 
   @Override protected void onPause() {

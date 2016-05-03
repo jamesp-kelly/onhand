@@ -88,14 +88,14 @@
 
     </RelativeLayout>
 
-    <FrameLayout
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/archive_recycleview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@color/cardview_shadow_start_color"
-        >
-
-    </FrameLayout>
+        android:background="@color/cardview_dark_background"
+        />
 
   </LinearLayout>
 
