@@ -60,17 +60,10 @@ public class HomeActivity extends BaseActivity implements HomeView {
     setContentView(R.layout.activity_home);
 
     bindDI();
-    presenter.onViewCreated();
 
-    //temp stuff
-    //List<String> tempStrings = Arrays.asList("one", "two", "three", "four", "one", "two", "three", "four", "one", "two", "three", "four");
     archiveRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-    //archiveListAdapter = new ArchiveListAdapter(tempStrings);
-    //archiveRecyclerView.setAdapter(archiveListAdapter);
-    //archiveRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
+    presenter.onViewCreated();
     presenter.loadArchiveScreenObjects();
-
   }
 
   @Override protected void onPause() {
@@ -95,9 +88,6 @@ public class HomeActivity extends BaseActivity implements HomeView {
 
   @OnClick(R.id.add_content)
   public void addClicked(View v) {
-
-    //Snackbar.make(v, "testing snackbar", Snackbar.LENGTH_SHORT).show();
-
     if (cameraFab.getVisibility() == View.VISIBLE) {
       cameraFab.hide();
       galleryFab.hide();

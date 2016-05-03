@@ -2,11 +2,16 @@ package com.jameskelly.onhand.util;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import com.jameskelly.onhand.R;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomMoveBehaviour extends CoordinatorLayout.Behavior<LinearLayout> {
@@ -31,6 +36,57 @@ public class CustomMoveBehaviour extends CoordinatorLayout.Behavior<LinearLayout
     }
 
     return false;
+  }
+
+  @Override
+  public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, LinearLayout child,
+      View directTargetChild, View target, int nestedScrollAxes) {
+
+    RecyclerView recyclerView;
+    try {
+      recyclerView = (RecyclerView) target;
+    } catch (ClassCastException e) {
+      Log.e(TAG, "Attempted to cast view to RecyclerView", e);
+      return false;
+    }
+
+    final LinearLayout fabLinearLayout = child;
+
+    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+      @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        super.onScrollStateChanged(recyclerView, newState);
+        List<FloatingActionButton> fabs = new ArrayList<>();
+
+        for (int i = 0; i < fabLinearLayout.getChildCount(); i++) {
+          try {
+            fabs.add((FloatingActionButton) fabLinearLayout.getChildAt(i));
+          } catch (ClassCastException e) {
+            Log.e(TAG, "Attempted to cast view to FAB", e);
+          }
+        }
+
+        if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+          for (FloatingActionButton fab : fabs) {
+            fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+              @Override public void onHidden(FloatingActionButton fab) {
+                ViewCompat.animate(fab).rotation(0f).start();
+                fab.setVisibility(View.INVISIBLE); //because views were reporting back as visible after the animation
+              }
+            });
+          }
+        } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+          for (FloatingActionButton fab : fabs) {
+
+            //only show the main button. no fab.getFabSize() available
+            if (fab.getId() == R.id.add_content) {
+              fab.show();
+            }
+          }
+        }
+      }
+    });
+
+    return true;
   }
 
   private float getFabTranslationYForSnackbar(CoordinatorLayout parent,
