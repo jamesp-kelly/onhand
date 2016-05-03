@@ -2,6 +2,8 @@ package com.jameskelly.onhand.home;
 
 import android.graphics.Bitmap;
 import com.jameskelly.onhand.base.BaseView;
+import com.jameskelly.onhand.model.ScreenObject;
+import java.util.List;
 
 public interface HomeView extends BaseView {
 
@@ -15,4 +17,6 @@ public interface HomeView extends BaseView {
   void navigateToArchive();
 
   void toggleOnHandService();
+
+  void displayArchiveScreenObjects(List<ScreenObject> screenObjects);
 }

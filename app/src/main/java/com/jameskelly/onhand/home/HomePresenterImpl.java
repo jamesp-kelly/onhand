@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import com.jameskelly.onhand.model.ImageLoader;
 import com.jameskelly.onhand.model.ScreenObject;
 import com.jameskelly.onhand.repository.ScreenObjectRepository;
+import java.util.List;
 
 public class HomePresenterImpl implements HomePresenter, ImageLoader.ImageLoadListener {
 
@@ -57,5 +58,12 @@ public class HomePresenterImpl implements HomePresenter, ImageLoader.ImageLoadLi
 
   @Override public void onImageLoadError() {
     homeView.showPreviewError();
+  }
+
+  @Override public void loadArchiveScreenObjects() {
+    final List<ScreenObject> previousScreenObjects =
+        screenObjectRepository.getAllPreviousScreenObjects();
+
+    homeView.displayArchiveScreenObjects(previousScreenObjects);
   }
 }

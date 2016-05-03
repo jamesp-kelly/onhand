@@ -6,4 +6,6 @@ public interface HomePresenter {
   void onViewCreated();
   void onViewDestroyed();
   void loadActiveScreenObject();
+
+  void loadArchiveScreenObjects();
 }

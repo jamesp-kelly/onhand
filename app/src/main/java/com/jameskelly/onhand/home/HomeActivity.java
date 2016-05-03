@@ -26,11 +26,11 @@ import com.jameskelly.onhand.base.BaseActivity;
 import com.jameskelly.onhand.di.HomeModule;
 import com.jameskelly.onhand.di.OnHandApplication;
 import com.jameskelly.onhand.model.ImageLoader;
+import com.jameskelly.onhand.model.ScreenObject;
 import com.jameskelly.onhand.service.OnHandServiceImpl;
 import com.jameskelly.onhand.util.OnHandUtils;
 import com.squareup.picasso.RequestCreator;
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -63,11 +63,14 @@ public class HomeActivity extends BaseActivity implements HomeView {
     presenter.onViewCreated();
 
     //temp stuff
-    List<String> tempStrings = Arrays.asList("one", "two", "three", "four", "one", "two", "three", "four", "one", "two", "three", "four");
+    //List<String> tempStrings = Arrays.asList("one", "two", "three", "four", "one", "two", "three", "four", "one", "two", "three", "four");
     archiveRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-    archiveListAdapter = new ArchiveListAdapter(tempStrings);
-    archiveRecyclerView.setAdapter(archiveListAdapter);
-    archiveRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    //archiveListAdapter = new ArchiveListAdapter(tempStrings);
+    //archiveRecyclerView.setAdapter(archiveListAdapter);
+    //archiveRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+    presenter.loadArchiveScreenObjects();
+
   }
 
   @Override protected void onPause() {
@@ -187,5 +190,11 @@ public class HomeActivity extends BaseActivity implements HomeView {
   @Override protected void onDestroy() {
     super.onDestroy();
     presenter.onViewDestroyed();
+  }
+
+  @Override public void displayArchiveScreenObjects(List<ScreenObject> screenObjects) {
+    archiveListAdapter = new ArchiveListAdapter(this, screenObjects);
+    archiveRecyclerView.setAdapter(archiveListAdapter);
+    archiveRecyclerView.setItemAnimator(new DefaultItemAnimator());
   }
 }
