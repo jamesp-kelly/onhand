@@ -83,11 +83,7 @@ public class CustomMoveBehaviour extends CoordinatorLayout.Behavior<LinearLayout
 
             //only show the main button. no fab.getFabSize() available
             if (fab.getId() == R.id.add_content) {
-              handler.postDelayed(new Runnable() {
-                @Override public void run() {
-                  fab.show();
-                }
-              }, 500);
+              handler.postDelayed(() -> fab.show(), 500);
             }
           }
         }
