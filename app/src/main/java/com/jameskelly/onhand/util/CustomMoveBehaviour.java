@@ -1,6 +1,7 @@
 package com.jameskelly.onhand.util;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,8 @@ import java.util.List;
 public class CustomMoveBehaviour extends CoordinatorLayout.Behavior<LinearLayout> {
 
   private final static String TAG = CustomMoveBehaviour.class.getSimpleName();
+  final Handler handler = new Handler();
+  List<FloatingActionButton> fabs = new ArrayList<>();
 
   public CustomMoveBehaviour(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -40,7 +43,7 @@ public class CustomMoveBehaviour extends CoordinatorLayout.Behavior<LinearLayout
 
   @Override
   public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, LinearLayout child,
-      View directTargetChild, View target, int nestedScrollAxes) {
+      View directTargetChild, View target, final int nestedScrollAxes) {
 
     RecyclerView recyclerView;
     try {
@@ -53,20 +56,21 @@ public class CustomMoveBehaviour extends CoordinatorLayout.Behavior<LinearLayout
     final LinearLayout fabLinearLayout = child;
 
     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-      @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+      @Override public void onScrollStateChanged(RecyclerView recyclerView, final int newState) {
         super.onScrollStateChanged(recyclerView, newState);
-        List<FloatingActionButton> fabs = new ArrayList<>();
 
-        for (int i = 0; i < fabLinearLayout.getChildCount(); i++) {
-          try {
-            fabs.add((FloatingActionButton) fabLinearLayout.getChildAt(i));
-          } catch (ClassCastException e) {
-            Log.e(TAG, "Attempted to cast view to FAB", e);
+        if (fabs.isEmpty()) {
+          for (int i = 0; i < fabLinearLayout.getChildCount(); i++) {
+            try {
+              fabs.add((FloatingActionButton) fabLinearLayout.getChildAt(i));
+            } catch (ClassCastException e) {
+              Log.e(TAG, "Attempted to cast view to FAB", e);
+            }
           }
         }
 
         if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-          for (FloatingActionButton fab : fabs) {
+          for (final FloatingActionButton fab : fabs) {
             fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
               @Override public void onHidden(FloatingActionButton fab) {
                 ViewCompat.animate(fab).rotation(0f).start();
@@ -75,11 +79,15 @@ public class CustomMoveBehaviour extends CoordinatorLayout.Behavior<LinearLayout
             });
           }
         } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-          for (FloatingActionButton fab : fabs) {
+          for (final FloatingActionButton fab : fabs) {
 
             //only show the main button. no fab.getFabSize() available
             if (fab.getId() == R.id.add_content) {
-              fab.show();
+              handler.postDelayed(new Runnable() {
+                @Override public void run() {
+                  fab.show();
+                }
+              }, 500);
             }
           }
         }
