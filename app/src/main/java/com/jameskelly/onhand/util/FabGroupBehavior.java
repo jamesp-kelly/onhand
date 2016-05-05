@@ -15,13 +15,16 @@ import com.jameskelly.onhand.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomMoveBehaviour extends CoordinatorLayout.Behavior<LinearLayout> {
+public class FabGroupBehavior extends CoordinatorLayout.Behavior<LinearLayout> {
 
-  private final static String TAG = CustomMoveBehaviour.class.getSimpleName();
+  private final static String TAG = FabGroupBehavior.class.getSimpleName();
   final Handler handler = new Handler();
   List<FloatingActionButton> fabs = new ArrayList<>();
 
-  public CustomMoveBehaviour(Context context, AttributeSet attrs) {
+  public FabGroupBehavior() {
+  }
+
+  public FabGroupBehavior(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 

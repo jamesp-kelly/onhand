@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:layout_gravity="bottom|end"
     android:layout_margin="16dp"
-    app:layout_behavior="com.jameskelly.onhand.util.CustomMoveBehaviour"
+    app:layout_behavior="com.jameskelly.onhand.util.FabGroupBehavior"
     >
   <android.support.design.widget.FloatingActionButton
       android:id="@+id/add_link"

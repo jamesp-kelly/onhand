@@ -16,7 +16,7 @@
       android:background="?attr/colorPrimary"
       android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
       app:popupTheme="@style/AppTheme.PopupOverlay"
-      app:layout_scrollFlags="scroll|enterAlways"
+      app:layout_scrollFlags="scroll|enterAlways|snap"
       tools:ignore="Overdraw" />
 
 </android.support.design.widget.AppBarLayout>
